@@ -1,0 +1,1025 @@
+{
+  "name": "Dodopizza",
+  "uniqueValue": "dodopizza",
+  "mail": "restaurant@dodopizza.com",
+  "website": "www.dodopizza.com",
+  "adress": {
+    "street": "Rue des Dodos",
+    "streetNumber": 1,
+    "postCode": 1000,
+    "city": "Bruxelles"
+  },
+  "phoneNumber": "+32407886655",
+
+  "orderSettings": {
+    "orderTypes": [
+      {
+        "value": 0,
+        "label": "Livraison",
+        "enabled": true
+      },
+      {
+        "value": 1,
+        "label": "À emporter",
+        "enabled": true
+      }
+    ],
+    "pendingOrderAlert": {
+      "enabled": true,
+      "interval": 5
+    },
+    "deliveryEstimate": {
+      "min": 30,
+      "max": 60
+    },
+    "deliveryFees": 5,
+    "deliveryMin": 20,
+    "takeAwayEstimate": 15,
+    "paymentMethods": [
+      {
+        "value": "Espèces",
+        "delivery": true,
+        "takeAway": true
+      },
+      {
+        "value": "Bancontact",
+        "delivery": false,
+        "takeAway": true
+      }
+    ]
+  },
+
+  "restaurantSettings": {
+    "schedule": [
+      {
+        "label": "Lundi",
+        "services": [
+          {
+            "start": "09:00",
+            "end": "14:30"
+          },
+          {
+            "start": "18:00",
+            "end": "22:00"
+          }
+        ]
+      },
+      {
+        "label": "Mardi",
+        "services": [
+          {
+            "start": "09:00",
+            "end": "14:30"
+          },
+          {
+            "start": "18:00",
+            "end": "22:00"
+          }
+        ]
+      },
+      {
+        "label": "Mercredi",
+        "services": [
+          {
+            "start": "09:00",
+            "end": "14:30"
+          },
+          {
+            "start": "18:00",
+            "end": "22:00"
+          }
+        ]
+      },
+      {
+        "label": "Jeudi",
+        "services": [
+          {
+            "start": "09:00",
+            "end": "14:30"
+          },
+          {
+            "start": "18:00",
+            "end": "22:00"
+          }
+        ]
+      },
+      {
+        "label": "Vendredi",
+        "services": [
+          {
+            "start": "09:00",
+            "end": "14:30"
+          },
+          {
+            "start": "18:00",
+            "end": "22:00"
+          }
+        ]
+      },
+      {
+        "label": "Samedi",
+        "services": [
+          {
+            "start": "18:00",
+            "end": "20:29"
+          }
+        ]
+      },
+      {
+        "label": "Dimanche",
+        "services": [
+          {
+            "start": "1:00",
+            "end": "14:30"
+          },
+          {
+            "start": "18:00",
+            "end": "22:00"
+          }
+        ]
+      }
+    ],
+    "exceptionnalClosings": [
+      {
+        "start": "2024-10-01T00:00:00Z",
+        "end": "2024-11-07T00:00:00Z"
+      }
+    ]
+  },
+
+  "menu": [
+    {
+      "value": "Pizza",
+      "display": true,
+      "foods": [
+        {
+          "value": "Pizza Margherita",
+          "description": "Sauce tomate, Mozzarella, Basilic",
+          "price": 10.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Pepperoni",
+          "description": "Sauce tomate, Mozzarella Pepperoni, Poivrons",
+          "price": 11.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Végétarienne",
+          "description": "Sauce tomate Mozzarella Champignons Poivrons Oignons Olives",
+          "price": 11.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Hawaiienne",
+          "description": "Sauce tomate, Mozzarella, Jambon, Ananas",
+          "price": 12.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Quatre Fromages",
+          "description": "Mozzarella, Gorgonzola, parmesan, Emmental",
+          "price": 12.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Frutti di Mare",
+          "description": "Sauce tomate, Fruits de mer, Ail, Persil",
+          "price": 13.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Calzone",
+          "description": "Sauce tomate, Mozzarella, Jambon, Champignons",
+          "price": 12.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza BBQ",
+          "description": "Sauce barbecue, Poulet grillé, Poivrons, Oignons, Mozzarella",
+          "price": 13.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Mexicaine",
+          "description": "Sauce tomate, Poulet épicé, Poivrons, Oignons, Maïs, Coriandre",
+          "price": 13.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pizza Capricciosa",
+          "description": "Sauce tomate, Jambon, Artichauts, Champignons, Olives, Mozzarella",
+          "price": 14.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ta taille",
+              "items": [
+                { "value": "Taille S", "price": 0 },
+                { "value": "Taille M", "price": 1.5 },
+                { "value": "Taille XL", "price": 3 }
+              ]
+            },
+            {
+              "label": "Choisis ta croute",
+              "items": [
+                { "value": "Croûte normale", "price": 0 },
+                { "value": "Croûte aux herbes", "price": 1 },
+                { "value": "Croûte au fromage", "price": 1 },
+                { "value": "Croûte sans gluten", "price": 2 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Olives noires", "price": 1.5 },
+                { "value": "Champignons", "price": 2 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "Pâtes",
+      "display": true,
+      "foods": [
+        {
+          "value": "Spaghetti Bolognese",
+          "description": "Sauce bolognaise Boeuf haché, Tomates, Oignons, Ail",
+          "price": 9.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Fettuccine Alfredo",
+          "description": "Sauce Alfredo, Poulet grillé, Parmesan; Persil",
+          "price": 11.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Penne Arrabiata",
+          "description": "Sauce tomate épicée, Ail, Persil",
+          "price": 10.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Lasagnes",
+          "description": "Sauce bolognaise, Béchamel, Fromage, Pâtes",
+          "price": 12.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Raviolis aux épinards et ricotta",
+          "description": "Sauce tomate, Épinards, Ricotta, Parmesan",
+          "price": 11.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pâtes Carbonara",
+          "description": "Sauce carbonara, Lardons, Oeuf, Parmesan",
+          "price": 10.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Gnocchi à la sauce pesto",
+          "description": "Sauce pesto, Gnocchi, Parmesan, Basilic",
+          "price": 10.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Tagliatelles aux fruits de mer",
+          "description": "Fruits de mer, Sauce à l'ail, Persil",
+          "price": 13.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Rigatoni à la Béchamel",
+          "description": "Sauce béchamel, Jambon, Champignons, Fromage",
+          "price": 11.49,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Pâtes Primavera",
+          "description": "Légumes grillés, Sauce à l'ail, Parmesan",
+          "price": 10.99,
+          "display": true,
+          "options": [
+            {
+              "label": "Choisis ton type de pâtes",
+              "items": [
+                { "value": "Pâtes blanches", "price": 0 },
+                { "value": "Pâtes complètes", "price": 0 },
+                { "value": "Pâtes sans gluten", "price": 1.5 }
+              ]
+            }
+          ],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "Entrées",
+      "display": true,
+      "foods": [
+        {
+          "value": "Bruschetta",
+          "description": "Tomates, Ail, Basilic, Pain grillé",
+          "price": 6.99,
+          "display": true,
+          "options": [],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Calamars frits",
+          "description": "Calamars, Chapelure, Sauce tartare",
+          "price": 8.99,
+          "display": true,
+          "options": [],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Ailes de poulet épicées",
+          "description": "Ailes de poulet, Sauce piquante, Carottes, Céleri",
+          "price": 9.99,
+          "display": true,
+          "supplements": [],
+          "options": [
+            {
+              "label": "Choisis ta portion",
+              "items": [
+                { "value": "Portion XL", "price": 2 },
+                { "value": "Portion normale", "price": 0 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Salade César",
+          "description": "Laitue romaine, Poulet grillé, Parmesan, Croûtons, Sauce César",
+          "price": 7.99,
+          "display": true,
+          "options": [],
+          "supplements": [
+            {
+              "label": "Choisis tes suppléments:",
+              "items": [
+                { "value": "Parmesan", "price": 1 },
+                { "value": "Tomates ceries", "price": 1.5 },
+                { "value": "Piments", "price": 1 }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "Mozzarella sticks",
+          "description": "Bâtonnets de mozzarella, Panure, Sauce marinara",
+          "price": 6.99,
+          "display": true,
+          "supplements": [],
+          "options": []
+        },
+        {
+          "value": "Soupe à l'oignon gratinée",
+          "description": "Soupe à l'oignon, Croûton, Fromage fondu",
+          "price": 6.49,
+          "display": true,
+          "supplements": [],
+          "options": []
+        }
+      ]
+    },
+    {
+      "value": "Desserts",
+      "display": true,
+      "foods": [
+        {
+          "value": "Tiramisu",
+          "description": "Biscuits à la cuillère, Café, Mascarpone, Cacao",
+          "price": 7.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Fondant au chocolat",
+          "description": "Chocolat noir, Beurre, Oeufs, Sucre, Farine",
+          "price": 8.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Panna Cotta",
+          "description": "Crème, Sucre, Gélatine, Vanille",
+          "price": 6.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Crumble aux fruits",
+          "description": "Fruits de saison, Sucre, Beurre, Farine, Avoine",
+          "price": 7.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Profiteroles",
+          "description": "Choux, Glace à la vanille, Chocolat chaud",
+          "price": 8.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Tarte aux fruits",
+          "description": "Pâte brisée, Fruits frais, Gelée de fruit",
+          "price": 9.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Mousse au citron",
+          "description": "Citron, Crème, Sucre, Gélatine",
+          "price": 6.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Crêpes au Nutella",
+          "description": "Crêpes, Nutella, Banane, Noix",
+          "price": 7.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Salade de fruits frais",
+          "description": "Fruits de saison, Miel, Menthe",
+          "price": 5.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Gâteau au fromage",
+          "description": "Fromage frais, Oeufs, Sucre, Vanille",
+          "price": 9.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        }
+      ]
+    },
+    {
+      "value": "Boissons",
+      "display": true,
+      "foods": [
+        {
+          "value": "Eau minérale",
+          "description": "Eau",
+          "price": 2.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Soda cola",
+          "description": "Soda, Cola",
+          "price": 3.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Jus d'orange frais",
+          "description": "Jus d'orange pressé",
+          "price": 4.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Café noir",
+          "description": "Café",
+          "price": 2.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Thé glacé",
+          "description": "Thé, Glaçons, Citron",
+          "price": 3.49,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Smoothie aux fruits rouges",
+          "description": "Fruits rouges, Yaourt, Miel",
+          "price": 5.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Mojito sans alcool",
+          "description": "Menthe, Citron vert, Sucre de canne, Eau gazeuse",
+          "price": 4.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Limonade maison",
+          "description": "Citron, Eau gazeuse, Sucre",
+          "price": 3.79,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Cappuccino",
+          "description": "Café, Lait, Mousse de lait",
+          "price": 4.29,
+          "display": true,
+          "options": [],
+          "supplements": []
+        },
+        {
+          "value": "Vin rouge",
+          "description": "Vin rouge, Cépages assortis",
+          "price": 8.99,
+          "display": true,
+          "options": [],
+          "supplements": []
+        }
+      ]
+    }
+  ]
+}
