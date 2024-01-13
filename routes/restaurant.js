@@ -65,7 +65,7 @@ router.post("/", async function (req, res, next) {
       menu: req.body.menu,
     });
 
-    res.json({ newRestaurant });
+    res.send({ newRestaurant });
   } catch (err) {
     console.error(err);
     next(err);
@@ -87,7 +87,7 @@ router.get("/:uniqueValue", function (req, res, next) {
               });
             })
           );
-          res.json({ restaurant });
+          res.send(restaurant);
         } else {
           const err = new Error(
             `No restaurant found for the value ${req.params.uniqueValue}`
