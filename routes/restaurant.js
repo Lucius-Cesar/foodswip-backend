@@ -30,7 +30,7 @@ var express = require("express");
 var router = express.Router();
 
 // create a new restaurant Document
-router.post("/", async function (req, res) {
+router.post("/", async function (req, res, next) {
   try {
     if (
       !checkBody(req.body, [
@@ -44,8 +44,8 @@ router.post("/", async function (req, res) {
         "menu",
       ])
     ) {
-      res.json({ result: false, error: "Body is incorrect" });
-      return;
+      const err = new Error("Body is incorrect");
+      next(err);
     }
 
     const uniqueValue = await generateUniqueValue(
@@ -65,16 +65,16 @@ router.post("/", async function (req, res) {
       menu: req.body.menu,
     });
 
-    res.json({ result: true, newRestaurant: newRestaurant });
-  } catch (error) {
-    console.error("Error creating restaurant:", error);
-    res.json({ result: false, error: error.message });
+    res.json({ newRestaurant });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
 //get info relative to one specific restaurant by uniqueValue field.
 //This is the main route that allows get restaurant info, settings and menu for the eaterView
-router.get("/:uniqueValue", function (req, res) {
+router.get("/:uniqueValue", function (req, res, next) {
   try {
     Restaurant.findOne({ uniqueValue: req.params.uniqueValue }).then(
       (restaurant) => {
@@ -87,18 +87,18 @@ router.get("/:uniqueValue", function (req, res) {
               });
             })
           );
-          res.json({ result: true, restaurant: restaurant });
+          res.json({ restaurant });
         } else {
-          res.json({
-            result: false,
-            error: `No restaurant found for the value ${req.params.uniqueValue}`,
-          });
+          const err = new Error(
+            `No restaurant found for the value ${req.params.uniqueValue}`
+          );
+          next(err);
         }
       }
     );
-  } catch (error) {
-    console.error("Error findOne restaurant:", error);
-    res.json({ result: false, error: error.message });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
