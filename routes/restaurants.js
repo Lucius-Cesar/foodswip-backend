@@ -1,5 +1,7 @@
+var express = require("express");
+var router = express.Router();
 const checkBody = require("../utils/checkBody");
-const Restaurant = require("../models/restaurants");
+const Restaurant = require("../models/restaurant");
 
 //utils
 const generateUniqueValue = async (name, city) => {
@@ -26,11 +28,11 @@ const generateUniqueValue = async (name, city) => {
   return uniqueValue;
 };
 
-var express = require("express");
-var router = express.Router();
+// create a new restaurant Document, this requet is IP limited
+router.post("/addRestaurant", async function (req, res, next) {
+  const allowedIPs = ["::ffff:127.0.0.1"];
+  const clientIP = req.ip;
 
-// create a new restaurant Document
-router.post("/", async function (req, res, next) {
   try {
     if (
       !checkBody(req.body, [
@@ -44,8 +46,14 @@ router.post("/", async function (req, res, next) {
         "menu",
       ])
     ) {
-      const err = new Error("Body is incorrect");
-      next(err);
+      return res.status(400).send({ error: "Bad Request: Body is incorrect" });
+    }
+    if (!allowedIPs.includes(clientIP)) {
+      return res
+        .status(403)
+        .send({
+          error: "Forbidden: This IP address is not allowed for this route",
+        });
     }
 
     const uniqueValue = await generateUniqueValue(
@@ -65,7 +73,7 @@ router.post("/", async function (req, res, next) {
       menu: req.body.menu,
     });
 
-    res.send({ newRestaurant });
+    return res.status(201).send({ newRestaurant });
   } catch (err) {
     console.error(err);
     next(err);
@@ -87,12 +95,9 @@ router.get("/:uniqueValue", function (req, res, next) {
               });
             })
           );
-          res.send(restaurant);
+          return res.status(201).send(restaurant);
         } else {
-          const err = new Error(
-            `No restaurant found for the value ${req.params.uniqueValue}`
-          );
-          next(err);
+          return res.status(404).send({ error: "No restaurant found" });
         }
       }
     );

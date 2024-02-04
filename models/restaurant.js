@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
-const Food = {
+
+const FoodSchema = new mongoose.Schema({
   value: String,
   description: String,
   price: Number,
   display: Boolean,
   options: [
     {
-      _id: false,
-      label: String,
       items: [{ value: String, price: Number }],
     },
   ],
@@ -18,13 +17,13 @@ const Food = {
       items: [{ value: String, price: Number }],
     },
   ],
-};
+});
 
-const FoodCategory = {
+const FoodCategorySchema = new mongoose.Schema({
   value: String,
   display: Boolean,
-  foods: [Food],
-};
+  foods: [FoodSchema],
+});
 
 const RestaurantSchema = new mongoose.Schema({
   name: String,
@@ -39,11 +38,12 @@ const RestaurantSchema = new mongoose.Schema({
     city: String,
   },
   orderSettings: {
+    _id: false,
     orderTypes: [
       {
         value: Number,
-        label: String,
         enabled: Boolean,
+        _id: false,
       },
     ],
     pendingOrderAlert: {
@@ -62,30 +62,36 @@ const RestaurantSchema = new mongoose.Schema({
         value: String,
         delivery: Boolean,
         takeAway: Boolean,
+        _id: false,
       },
     ],
   },
   restaurantSettings: {
+    _id: false,
     schedule: [
       {
-        label: String,
+        value: String,
         services: [
           {
             start: String,
             end: String,
+            _id: false,
           },
         ],
+        _id: false,
       },
     ],
     exceptionnalClosings: [
       {
         start: Date,
         end: Date,
+        _id: false,
       },
     ],
   },
-  menu: [FoodCategory],
+  //foodSchema is nested in foodCategoriesSchema
+  menu: [FoodCategorySchema],
 });
 
-const Restaurant = mongoose.model("Restaurant", RestaurantSchema);
+const Restaurant = mongoose.model("restaurant", RestaurantSchema);
 module.exports = Restaurant;

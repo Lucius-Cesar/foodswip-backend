@@ -15,12 +15,10 @@
     "orderTypes": [
       {
         "value": 0,
-        "label": "Livraison",
         "enabled": true
       },
       {
         "value": 1,
-        "label": "À emporter",
         "enabled": true
       }
     ],
@@ -37,12 +35,12 @@
     "takeAwayEstimate": 15,
     "paymentMethods": [
       {
-        "value": "Espèces",
+        "value": "cash",
         "delivery": true,
         "takeAway": true
       },
       {
-        "value": "Bancontact",
+        "value": "bancontact",
         "delivery": false,
         "takeAway": true
       }
@@ -52,7 +50,7 @@
   "restaurantSettings": {
     "schedule": [
       {
-        "label": "Lundi",
+        "value": "monday",
         "services": [
           {
             "start": "09:00",
@@ -65,7 +63,7 @@
         ]
       },
       {
-        "label": "Mardi",
+        "value": "tuesday",
         "services": [
           {
             "start": "09:00",
@@ -78,7 +76,7 @@
         ]
       },
       {
-        "label": "Mercredi",
+        "value": "wednesday",
         "services": [
           {
             "start": "09:00",
@@ -91,7 +89,7 @@
         ]
       },
       {
-        "label": "Jeudi",
+        "value": "thursday",
         "services": [
           {
             "start": "09:00",
@@ -104,7 +102,7 @@
         ]
       },
       {
-        "label": "Vendredi",
+        "value": "friday",
         "services": [
           {
             "start": "09:00",
@@ -117,7 +115,7 @@
         ]
       },
       {
-        "label": "Samedi",
+        "value": "saturday",
         "services": [
           {
             "start": "18:00",
@@ -126,7 +124,7 @@
         ]
       },
       {
-        "label": "Dimanche",
+        "value": "sunday",
         "services": [
           {
             "start": "1:00",
