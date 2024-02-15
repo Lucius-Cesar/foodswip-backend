@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("./models/connection");
-//const { postOrderLimiter } = require("./middlewares/rateLimit");
+const { postOrderLimiter } = require("./middlewares/rateLimit");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // limiters, should be ordered before the routes
-//app.use("/orders/addOrder", postOrderLimiter);
+app.use("/orders/addOrder", postOrderLimiter);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
