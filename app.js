@@ -13,6 +13,7 @@ var restaurantsRouter = require("./routes/restaurants");
 var ordersRouter = require("./routes/orders");
 
 var app = express();
+app.set("trust proxy", true);
 
 app.use(logger("dev"));
 app.use(express.json());
