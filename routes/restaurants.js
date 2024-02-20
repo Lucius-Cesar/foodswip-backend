@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const checkBody = require("../utils/checkBody");
 const Restaurant = require("../models/restaurant");
+const Food = require("../models/food");
 
 //utils
 const generateUniqueValue = async (name, city) => {
@@ -49,16 +50,29 @@ router.post("/addRestaurant", async function (req, res, next) {
       return res.status(400).send({ error: "Bad Request: Body is incorrect" });
     }
     if (!allowedIPs.includes(clientIP)) {
-      return res
-        .status(403)
-        .send({
-          error: "Forbidden: This IP address is not allowed for this route",
-        });
+      return res.status(403).send({
+        error: "Forbidden: This IP address is not allowed for this route",
+      });
     }
 
     const uniqueValue = await generateUniqueValue(
       req.body.name,
       req.body.adress.city
+    );
+
+    const foodCategories = await Promise.all(
+      req.body.menu.map(async (foodCategory) => {
+        return {
+          ...foodCategory,
+          foods: await Promise.all(
+            foodCategory.foods.map(async (food) => {
+              food.options.items?.sort((a, b) => a.price - b.price);
+              const newFood = await Food.create(food);
+              return newFood._id;
+            })
+          ),
+        };
+      })
     );
 
     const newRestaurant = await Restaurant.create({
@@ -70,7 +84,7 @@ router.post("/addRestaurant", async function (req, res, next) {
       adress: req.body.adress,
       orderSettings: req.body.orderSettings,
       restaurantSettings: req.body.restaurantSettings,
-      menu: req.body.menu,
+      menu: foodCategories,
     });
 
     return res.status(201).send({ newRestaurant });
@@ -84,23 +98,15 @@ router.post("/addRestaurant", async function (req, res, next) {
 //This is the main route that allows get restaurant info, settings and menu for the eaterView
 router.get("/:uniqueValue", function (req, res, next) {
   try {
-    Restaurant.findOne({ uniqueValue: req.params.uniqueValue }).then(
-      (restaurant) => {
+    Restaurant.findOne({ uniqueValue: req.params.uniqueValue })
+      .populate("menu.foods")
+      .then((restaurant) => {
         if (restaurant) {
-          //sort options and options by ascending price
-          restaurant.menu.flatMap((category) =>
-            category.foods.flatMap((food) => {
-              food.options.forEach((option) => {
-                option.items.sort((a, b) => a.price - b.price);
-              });
-            })
-          );
           return res.status(201).send(restaurant);
         } else {
           return res.status(404).send({ error: "No restaurant found" });
         }
-      }
-    );
+      });
   } catch (err) {
     console.error(err);
     next(err);

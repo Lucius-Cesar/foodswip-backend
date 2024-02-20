@@ -1,42 +1,22 @@
 const mongoose = require("mongoose");
 
-const FoodSchema = new mongoose.Schema({
-  value: String,
-  description: String,
-  price: Number,
-  display: Boolean,
-  options: [
-    {
-      items: [{ value: String, price: Number }],
-    },
-  ],
-  supplements: [
-    {
-      _id: false,
-      label: String,
-      items: [{ value: String, price: Number }],
-    },
-  ],
-});
-
 const FoodCategorySchema = new mongoose.Schema({
-  value: String,
+  title: String,
   display: Boolean,
-  foods: [FoodSchema],
+  foods: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],
 });
 
 const RestaurantSchema = new mongoose.Schema({
   name: String,
   uniqueValue: String,
   mail: String,
-  website: String,
-  phoneNumber: String,
   adress: {
     street: String,
     streetNumber: String,
     postCode: String,
     city: String,
   },
+  website: String,
   orderSettings: {
     _id: false,
     orderTypes: [

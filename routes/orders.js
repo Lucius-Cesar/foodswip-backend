@@ -44,7 +44,7 @@ router.post("/addOrder", async function (req, res, next) {
 
     //sort by foodCategory Index for the ticket
     sortedArticles = req.body.articles.sort(
-      (a, b) => a.categoryIndex < b.categoryIndex
+      (a, b) => a.foodCategoryIndex - b.foodCategoryIndex
     );
     const newOrder = await Order.create({
       orderNumber: NewOrderNumber.count,
@@ -56,7 +56,7 @@ router.post("/addOrder", async function (req, res, next) {
         postCode: req.body.postCode,
         ip: req.ip,
       },
-      articles: req.body.articles,
+      articles: sortedArticles,
       articlesSum: req.body.articlesSum,
       totalSum: req.body.totalSum,
       creationDate: currentDate,

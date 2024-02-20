@@ -147,7 +147,7 @@
 
   "menu": [
     {
-      "value": "Pizza",
+      "title": "Pizza",
       "display": true,
       "foods": [
         {
@@ -182,7 +182,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Pepperoni",
@@ -216,7 +217,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Végétarienne",
@@ -250,7 +252,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Hawaiienne",
@@ -284,7 +287,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Quatre Fromages",
@@ -318,7 +322,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Frutti di Mare",
@@ -386,7 +391,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza BBQ",
@@ -420,7 +426,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Mexicaine",
@@ -454,7 +461,8 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pizza Capricciosa",
@@ -488,12 +496,13 @@
                 { "value": "Champignons", "price": 2 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         }
       ]
     },
     {
-      "value": "Pâtes",
+      "title": "Pâtes",
       "display": true,
       "foods": [
         {
@@ -520,7 +529,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Fettuccine Alfredo",
@@ -546,7 +556,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Penne Arrabiata",
@@ -572,7 +583,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Lasagnes",
@@ -598,7 +610,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Raviolis aux épinards et ricotta",
@@ -624,7 +637,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pâtes Carbonara",
@@ -650,7 +664,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Gnocchi à la sauce pesto",
@@ -676,7 +691,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Tagliatelles aux fruits de mer",
@@ -702,7 +718,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Rigatoni à la Béchamel",
@@ -728,7 +745,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Pâtes Primavera",
@@ -754,12 +772,13 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         }
       ]
     },
     {
-      "value": "Entrées",
+      "title": "Entrées",
       "display": true,
       "foods": [
         {
@@ -777,7 +796,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Calamars frits",
@@ -794,7 +814,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Ailes de poulet épicées",
@@ -810,7 +831,8 @@
                 { "value": "Portion normale", "price": 0 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Salade César",
@@ -827,7 +849,8 @@
                 { "value": "Piments", "price": 1 }
               ]
             }
-          ]
+          ],
+          "tva": 6
         },
         {
           "value": "Mozzarella sticks",
@@ -845,10 +868,11 @@
           "supplements": [],
           "options": []
         }
-      ]
+      ],
+      "tva": 6
     },
     {
-      "value": "Desserts",
+      "title": "Desserts",
       "display": true,
       "foods": [
         {
@@ -857,7 +881,8 @@
           "price": 7.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Fondant au chocolat",
@@ -865,7 +890,8 @@
           "price": 8.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Panna Cotta",
@@ -873,7 +899,8 @@
           "price": 6.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Crumble aux fruits",
@@ -881,7 +908,8 @@
           "price": 7.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Profiteroles",
@@ -889,7 +917,8 @@
           "price": 8.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Tarte aux fruits",
@@ -897,7 +926,8 @@
           "price": 9.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Mousse au citron",
@@ -905,7 +935,8 @@
           "price": 6.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Crêpes au Nutella",
@@ -913,7 +944,8 @@
           "price": 7.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Salade de fruits frais",
@@ -921,7 +953,8 @@
           "price": 5.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Gâteau au fromage",
@@ -929,12 +962,13 @@
           "price": 9.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         }
       ]
     },
     {
-      "value": "Boissons",
+      "tite": "Boissons",
       "display": true,
       "foods": [
         {
@@ -943,7 +977,8 @@
           "price": 2.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Soda cola",
@@ -951,7 +986,8 @@
           "price": 3.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Jus d'orange frais",
@@ -959,7 +995,8 @@
           "price": 4.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Café noir",
@@ -967,7 +1004,8 @@
           "price": 2.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Thé glacé",
@@ -975,7 +1013,8 @@
           "price": 3.49,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Smoothie aux fruits rouges",
@@ -983,7 +1022,8 @@
           "price": 5.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Mojito sans alcool",
@@ -991,7 +1031,8 @@
           "price": 4.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Limonade maison",
@@ -999,7 +1040,8 @@
           "price": 3.79,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Cappuccino",
@@ -1007,7 +1049,8 @@
           "price": 4.29,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 6
         },
         {
           "value": "Vin rouge",
@@ -1015,7 +1058,8 @@
           "price": 8.99,
           "display": true,
           "options": [],
-          "supplements": []
+          "supplements": [],
+          "tva": 21
         }
       ]
     }

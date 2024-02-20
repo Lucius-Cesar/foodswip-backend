@@ -6,11 +6,11 @@ const OptionSupplementSchema = new mongoose.Schema({
 });
 const ArticleSchema = new mongoose.Schema({
   value: String,
-  food: { type: mongoose.Schema.Types.ObjectId },
+  food: { type: mongoose.Schema.Types.ObjectId, ref: "food" },
   quantity: Number,
-  options: [OptionSupplementSchema],
-  supplements: [OptionSupplementSchema],
-  categoryIndex: Number,
+  selectedOptions: [OptionSupplementSchema],
+  selectedSupplements: [OptionSupplementSchema],
+  foodCategoryIndex: Number,
 });
 
 const OrderSchema = {
