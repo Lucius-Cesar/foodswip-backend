@@ -113,4 +113,45 @@ router.get("/:uniqueValue", function (req, res, next) {
   }
 });
 
+router.post("/updateRestaurantSettings", function (req, res, next) {
+  try {
+    Restaurant.findOne({ uniqueValue: req.body.uniqueValue }).then(
+      (restaurant) => {
+        if (restaurant) {
+          restaurant.name = req.body.name;
+          restaurant.mail = req.body.mail;
+          restaurant.adress = req.body.adress;
+          restaurant.phoneNumber = req.body.phoneNumber;
+          restaurant.website = req.body.website;
+          restaurant.restaurantSettings = req.body.restaurantSettings;
+          restaurant.orderSettings = req.body.orderSettings;
+          restaurant
+            .save()
+            .then((savedRestaurant) => {
+              // Vérifiez si l'enregistrement a été sauvegardé avec succès
+              if (savedRestaurant === restaurant) {
+                return res.status(201).send(savedRestaurant);
+              } else {
+                return res
+                  .status(500)
+                  .send({ error: "Failed to save restaurant settings" });
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              return res
+                .status(500)
+                .send({ error: "Failed to save restaurant settings" });
+            });
+        } else {
+          return res.status(404).send({ error: "No restaurant found" });
+        }
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 module.exports = router;

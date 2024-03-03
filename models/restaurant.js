@@ -15,7 +15,9 @@ const RestaurantSchema = new mongoose.Schema({
     streetNumber: String,
     postCode: String,
     city: String,
+    country: String,
   },
+  phoneNumber: String,
   website: String,
   orderSettings: {
     _id: false,
@@ -61,7 +63,7 @@ const RestaurantSchema = new mongoose.Schema({
         _id: false,
       },
     ],
-    exceptionnalClosings: [
+    exceptionalClosings: [
       {
         start: Date,
         end: Date,
