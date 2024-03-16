@@ -11,141 +11,6 @@
     "country": "Belgique"
   },
   "phoneNumber": "+32407886655",
-
-  "orderSettings": {
-    "orderTypes": [
-      {
-        "value": 0,
-        "enabled": true
-      },
-      {
-        "value": 1,
-        "enabled": true
-      }
-    ],
-    "pendingOrderAlert": {
-      "enabled": true,
-      "interval": 5
-    },
-    "deliveryEstimate": {
-      "min": 30,
-      "max": 60
-    },
-    "deliveryFees": 5,
-    "deliveryMin": 30,
-    "takeAwayEstimate": 15,
-    "paymentMethods": [
-      {
-        "value": "cash",
-        "delivery": true,
-        "takeAway": true
-      },
-      {
-        "value": "bancontact",
-        "delivery": false,
-        "takeAway": true
-      }
-    ]
-  },
-
-  "restaurantSettings": {
-    "schedule": [
-      {
-        "value": "monday",
-        "services": [
-          {
-            "start": "09:00",
-            "end": "14:30"
-          },
-          {
-            "start": "18:00",
-            "end": "22:00"
-          }
-        ]
-      },
-      {
-        "value": "tuesday",
-        "services": [
-          {
-            "start": "09:00",
-            "end": "14:30"
-          },
-          {
-            "start": "18:00",
-            "end": "22:00"
-          }
-        ]
-      },
-      {
-        "value": "wednesday",
-        "services": [
-          {
-            "start": "09:00",
-            "end": "14:30"
-          },
-          {
-            "start": "18:00",
-            "end": "22:00"
-          }
-        ]
-      },
-      {
-        "value": "thursday",
-        "services": [
-          {
-            "start": "09:00",
-            "end": "14:30"
-          },
-          {
-            "start": "18:00",
-            "end": "22:00"
-          }
-        ]
-      },
-      {
-        "value": "friday",
-        "services": [
-          {
-            "start": "09:00",
-            "end": "14:30"
-          },
-          {
-            "start": "18:00",
-            "end": "22:00"
-          }
-        ]
-      },
-      {
-        "value": "saturday",
-        "services": [
-          {
-            "start": "18:00",
-            "end": "20:29"
-          }
-        ]
-      },
-      {
-        "value": "sunday",
-        "services": [
-          {
-            "start": "1:00",
-            "end": "14:30"
-          },
-          {
-            "start": "18:00",
-            "end": "22:00"
-          }
-        ]
-      }
-    ],
-    "exceptionalClosings": [
-      {
-        "start": "2024-10-01T00:00:00",
-        "end": "2024-11-07T00:00:00"
-      }
-    ]
-  },
-
   "menu": [
     {
       "title": "Pizza",
@@ -859,7 +724,8 @@
           "price": 6.99,
           "display": true,
           "supplements": [],
-          "options": []
+          "options": [],
+          "tva": 6
         },
         {
           "value": "Soupe à l'oignon gratinée",
@@ -867,10 +733,10 @@
           "price": 6.49,
           "display": true,
           "supplements": [],
-          "options": []
+          "options": [],
+          "tva": 6
         }
-      ],
-      "tva": 6
+      ]
     },
     {
       "title": "Desserts",

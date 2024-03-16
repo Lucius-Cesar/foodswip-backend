@@ -1,8 +1,11 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const authenticateToken = require("../middlewares/authenticateToken");
 const checkBody = require("../utils/checkBody");
 const Restaurant = require("../models/restaurant");
 const Food = require("../models/food");
+const catchAsyncErrors = require("../utils/catchAsyncErrors");
+const AppError = require("../AppError");
 
 //utils
 const generateUniqueValue = async (name, city) => {
@@ -30,11 +33,11 @@ const generateUniqueValue = async (name, city) => {
 };
 
 // create a new restaurant Document, this requet is IP limited
-router.post("/addRestaurant", async function (req, res, next) {
-  const allowedIPs = ["::ffff:127.0.0.1"];
-  const clientIP = req.ip;
-
-  try {
+router.post(
+  "/addRestaurant",
+  catchAsyncErrors(async (req, res, next) => {
+    const allowedIPs = ["::ffff:127.0.0.1"];
+    const clientIP = req.ip;
     if (
       !checkBody(req.body, [
         "name",
@@ -47,12 +50,14 @@ router.post("/addRestaurant", async function (req, res, next) {
         "menu",
       ])
     ) {
-      return res.status(400).send({ error: "Bad Request: Body is incorrect" });
+      throw new AppError("Body is incorrect", 400, "BadRequestError");
     }
     if (!allowedIPs.includes(clientIP)) {
-      return res.status(403).send({
-        error: "Forbidden: This IP address is not allowed for this route",
-      });
+      throw new AppError(
+        "This IP address is not allowed for this route",
+        400,
+        "ForbiddenError"
+      );
     }
 
     const uniqueValue = await generateUniqueValue(
@@ -87,37 +92,47 @@ router.post("/addRestaurant", async function (req, res, next) {
       menu: foodCategories,
     });
 
-    return res.status(201).send({ newRestaurant });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+    return res.json(newRestaurant);
+  })
+);
 
 //get info relative to one specific restaurant by uniqueValue field.
 //This is the main route that allows get restaurant info, settings and menu for the eaterView
-router.get("/:uniqueValue", function (req, res, next) {
-  try {
-    Restaurant.findOne({ uniqueValue: req.params.uniqueValue })
-      .populate("menu.foods")
-      .then((restaurant) => {
-        if (restaurant) {
-          return res.status(201).send(restaurant);
-        } else {
-          return res.status(404).send({ error: "No restaurant found" });
-        }
-      });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+router.get(
+  "/:uniqueValue",
+  catchAsyncErrors(function (req, res, next) {
+    try {
+      Restaurant.findOne({ uniqueValue: req.params.uniqueValue })
+        .populate("menu.foods")
+        .then((restaurant) => {
+          if (restaurant) {
+            return res.status.json(restaurant);
+          } else {
+            throw new AppError("Restaurant Not Found", 404, "NotFoundError");
+          }
+        });
+    } catch (err) {
+      console.error(err);
+      next(err);
+    }
+  })
+);
 
-router.post("/updateRestaurantSettings", function (req, res, next) {
-  try {
+router.post(
+  "/updateRestaurantSettings",
+  authenticateToken,
+  catchAsyncErrors(async (req, res, next) => {
     Restaurant.findOne({ uniqueValue: req.body.uniqueValue }).then(
       (restaurant) => {
         if (restaurant) {
+          //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
+          if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
+            throw new AppError(
+              "Update restaurant settings is Forbidden for this user",
+              403,
+              "ForbiddenError"
+            );
+          }
           restaurant.name = req.body.name;
           restaurant.mail = req.body.mail;
           restaurant.adress = req.body.adress;
@@ -125,33 +140,20 @@ router.post("/updateRestaurantSettings", function (req, res, next) {
           restaurant.website = req.body.website;
           restaurant.restaurantSettings = req.body.restaurantSettings;
           restaurant.orderSettings = req.body.orderSettings;
-          restaurant
-            .save()
-            .then((savedRestaurant) => {
-              // Vérifiez si l'enregistrement a été sauvegardé avec succès
-              if (savedRestaurant === restaurant) {
-                return res.status(201).send(savedRestaurant);
-              } else {
-                return res
-                  .status(500)
-                  .send({ error: "Failed to save restaurant settings" });
-              }
-            })
-            .catch((err) => {
-              console.error(err);
-              return res
-                .status(500)
-                .send({ error: "Failed to save restaurant settings" });
-            });
+          restaurant.save().then((savedRestaurant) => {
+            // Vérifiez si l'enregistrement a été sauvegardé avec succès
+            if (savedRestaurant === restaurant) {
+              return res.json(savedRestaurant);
+            } else {
+              throw new AppError("Failed to save restaurant settings");
+            }
+          });
         } else {
-          return res.status(404).send({ error: "No restaurant found" });
+          throw new AppError("Restaurant Not Found", 404, "NotFoundError");
         }
       }
     );
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+  })
+);
 
 module.exports = router;

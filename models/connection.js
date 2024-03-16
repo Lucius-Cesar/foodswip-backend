@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const crypto = require("crypto");
+
 const connectionString = process.env.CONNECTION_STRING;
 mongoose
   .connect(connectionString, { connectTimeoutMs: 2000 })

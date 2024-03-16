@@ -4,9 +4,12 @@ const checkBody = require("../utils/checkBody");
 const Order = require("../models/order");
 const Restaurant = require("../models/restaurant");
 const Counter = require("../models/counter");
+const catchAsyncErrors = require("../utils/catchAsyncErrors");
+const AppError = require("../AppError");
 
-router.post("/addOrder", async function (req, res, next) {
-  try {
+router.post(
+  "/addOrder",
+  catchAsyncErrors(async (req, res, next) => {
     //This route have a limiter of 1 request every 15 minutes by ip, see {postOrderLimiter} from @/middlewares/rateLimit imported in the app.js
     if (
       !checkBody(req.body, [
@@ -25,7 +28,7 @@ router.post("/addOrder", async function (req, res, next) {
         "restaurantId",
       ])
     ) {
-      return res.status(400).send({ error: "Bad Request: Body is incorrect" });
+      throw new AppError("Body is incorrect", 400, "BadRequestError");
     }
 
     //check if restaurant is in the database
@@ -33,7 +36,7 @@ router.post("/addOrder", async function (req, res, next) {
       _id: req.body.restaurantId,
     });
     if (!restaurantFound) {
-      return res.status(404).send({ error: "Restaurant not found" });
+      throw new AppError("Restaurant not found", 404, "NotFoundError");
     }
 
     const currentDate = new Date();
@@ -69,15 +72,13 @@ router.post("/addOrder", async function (req, res, next) {
       statusHistory: [{ status: "completed", date: currentDate }], // Change this in the next versions with "pending"
       restaurantId: restaurantFound._id,
     });
-    return res.status(201).send(newOrder);
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+    return res.json(newOrder);
+  })
+);
 
-router.get("/:orderNumber", async function (req, res, next) {
-  try {
+router.get(
+  "/:orderNumber",
+  catchAsyncErrors(async function (req, res, next) {
     const orderFound = await Order.findOne({
       orderNumber: req.params.orderNumber,
     });
@@ -85,19 +86,18 @@ router.get("/:orderNumber", async function (req, res, next) {
       const allowedIPs = [orderFound.customer.ip];
       const clientIP = req.ip;
       if (!allowedIPs.includes(clientIP)) {
-        return res.status(403).send({
-          error: "Forbidden: This IP address is not allowed for this order",
-        });
+        throw new AppError(
+          "This IP address is not allowed for this order",
+          403,
+          "FordbiddenError"
+        );
       } else {
-        res.status(201).send(orderFound);
+        res.json(orderFound);
       }
     } else {
-      return res.status(404).send({ error: "Order Not Found" });
+      throw new AppError("Order Not Found", 404, "NotFoundError");
     }
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+  })
+);
 
 module.exports = router;

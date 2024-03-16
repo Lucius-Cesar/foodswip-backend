@@ -1,18 +1,25 @@
 require("dotenv").config();
 require("./models/connection");
 const { postOrderLimiter } = require("./middlewares/rateLimit");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var cors = require("cors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
+const https = require("https");
+const helmet = require("helmet");
+const passport = require("passport");
+require("./passport");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var restaurantsRouter = require("./routes/restaurants");
-var ordersRouter = require("./routes/orders");
+const errorHandler = require("./middlewares/errorHandler");
 
-var app = express();
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const restaurantsRouter = require("./routes/restaurants");
+const ordersRouter = require("./routes/orders");
+const { prototype } = require("module");
+
+const app = express();
 app.set("trust proxy", true);
 
 app.use(logger("dev"));
@@ -20,14 +27,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  })
+);
+app.use(express.json());
+app.use(passport.initialize());
+app.use(cookieParser());
 
+app.use(helmet());
 // limiters, should be ordered before the routes
 app.use("/orders/addOrder", postOrderLimiter);
-
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/restaurants", restaurantsRouter);
 app.use("/orders", ordersRouter);
+
+//error handler
+app.use(errorHandler);
+/*https.createServer(
+    key:'',
+    cert:''
+).listen(PORT, () => {
+    console.log(`Listening on port ${prototype}`)
+}) */
 
 module.exports = app;
