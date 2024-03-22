@@ -5,7 +5,7 @@ const checkBody = require("../utils/checkBody");
 const Restaurant = require("../models/restaurant");
 const Food = require("../models/food");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
-const AppError = require("../AppError");
+const AppError = require("../utils/AppError");
 
 //utils
 const generateUniqueValue = async (name, city) => {
@@ -100,20 +100,14 @@ router.post(
 //This is the main route that allows get restaurant info, settings and menu for the eaterView
 router.get(
   "/:uniqueValue",
-  catchAsyncErrors(function (req, res, next) {
-    try {
-      Restaurant.findOne({ uniqueValue: req.params.uniqueValue })
-        .populate("menu.foods")
-        .then((restaurant) => {
-          if (restaurant) {
-            return res.status.json(restaurant);
-          } else {
-            throw new AppError("Restaurant Not Found", 404, "NotFoundError");
-          }
-        });
-    } catch (err) {
-      console.error(err);
-      next(err);
+  catchAsyncErrors(async (req, res, next) => {
+    const restaurant = await Restaurant.findOne({
+      uniqueValue: req.params.uniqueValue.toLowerCase(),
+    }).populate("menu.foods");
+    if (restaurant) {
+      return res.json(restaurant);
+    } else {
+      throw new AppError("Restaurant Not Found", 404, "NotFoundError");
     }
   })
 );

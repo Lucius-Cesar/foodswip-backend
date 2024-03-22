@@ -5,7 +5,7 @@ const Order = require("../models/order");
 const Restaurant = require("../models/restaurant");
 const Counter = require("../models/counter");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
-const AppError = require("../AppError");
+const AppError = require("../utils/AppError");
 
 router.post(
   "/addOrder",

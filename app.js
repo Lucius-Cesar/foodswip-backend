@@ -20,7 +20,7 @@ const ordersRouter = require("./routes/orders");
 const { prototype } = require("module");
 
 const app = express();
-app.set("trust proxy", true);
+app.set("trust proxy", "loopback");
 
 app.use(logger("dev"));
 app.use(express.json());

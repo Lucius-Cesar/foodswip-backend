@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
-const AppError = require("../AppError");
+const AppError = require("../utils/AppError");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {

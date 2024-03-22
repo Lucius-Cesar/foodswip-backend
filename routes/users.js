@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const RefreshToken = require("../models/refreshToken");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
-const AppError = require("../AppError");
+const AppError = require("../utils/AppError");
 
 function generateAccessToken(userInfo) {
   return jwt.sign(userInfo, process.env.JWT_ACCESS_SECRET, {
@@ -29,7 +29,7 @@ router.post(
           throw new AppError(
             "Invalid username or password",
             401,
-            "UnauthorizedError"
+            "InvalidCredentialsError"
           );
         }
         req.login(user, { session: false }, async (error) => {
@@ -37,7 +37,7 @@ router.post(
             throw new AppError(
               "Invalid username or password",
               401,
-              "UnauthorizedError"
+              "ErrorInvalidCredentials"
             );
 
           const userInfo = {
@@ -80,59 +80,52 @@ router.post(
   })
 );
 
-router.delete(
-  "/logOut",
-  catchAsyncErrors(async (req, res) => {
-    const refreshToken = req.cookies.token;
-    if (!refreshToken) {
-      throw new AppError("No token found", 401, "UnauthorizedError");
-    } else {
-      RefreshToken.deleteOne({ token: refreshToken });
-      res.json({ succes: true });
-    }
-  })
-);
+router.delete("/logOut", async (req, res) => {
+  const refreshToken = req.cookies.token;
+  await RefreshToken.deleteOne({ token: refreshToken });
+  res.json({ succes: true });
+});
 
 router.get(
   "/refreshToken",
   catchAsyncErrors(async (req, res) => {
     const refreshToken = req.cookies.token;
-    console.log(refreshToken);
-    if (refreshToken == null) {
-      throw new AppError("No token found", 401, "UnauthorizedError");
+    if (!refreshToken) {
+      throw new AppError("No token found", 401, "ErrorUnauthorized");
     } else {
-      RefreshToken.findOne({ token: refreshToken }).then((tokenFound) => {
-        if (tokenFound) {
-          jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET,
-            (err, user) => {
-              console.log(user);
-              if (err) return res.sendStatus(403);
-              const accessToken = generateAccessToken({
+      const tokenFound = await RefreshToken.findOne({ token: refreshToken });
+      if (tokenFound) {
+        jwt.verify(
+          refreshToken,
+          process.env.JWT_REFRESH_SECRET,
+          (err, user) => {
+            if (err)
+              throw new AppError(
+                "Unauthorized token",
+                403,
+                "ErrorUnauthorized"
+              );
+            const accessToken = generateAccessToken({
+              username: user.username,
+              restaurantUniqueValue: user.restaurantUniqueValue,
+            });
+            res.json({
+              token: accessToken,
+              user: {
                 username: user.username,
                 restaurantUniqueValue: user.restaurantUniqueValue,
-              });
-              res.json({
-                token: accessToken,
-                user: {
-                  username: user.username,
-                  restaurantUniqueValue: user.restaurantUniqueValue,
-                },
-              });
-            }
-          );
-        } else {
-          throw new AppError(
-            "No corresponding Token Found",
-            404,
-            "Not Found Error"
-          );
-        }
-      });
+              },
+            });
+          }
+        );
+      } else {
+        throw new AppError(
+          "No corresponding Token Found",
+          404,
+          "ErrorNotFound"
+        );
+      }
     }
-
-    //setup mongodb refresh token collections
   })
 );
 
