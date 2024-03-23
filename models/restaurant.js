@@ -19,7 +19,7 @@ const RestaurantSchema = new mongoose.Schema({
   },
   phoneNumber: String,
   website: String,
-  orderSettings: {
+  publicSettings: {
     _id: false,
     orderTypes: [
       {
@@ -28,10 +28,6 @@ const RestaurantSchema = new mongoose.Schema({
         _id: false,
       },
     ],
-    pendingOrderAlert: {
-      enabled: Boolean,
-      interval: Number,
-    },
     deliveryEstimate: {
       min: Number,
       max: Number,
@@ -47,9 +43,6 @@ const RestaurantSchema = new mongoose.Schema({
         _id: false,
       },
     ],
-  },
-  restaurantSettings: {
-    _id: false,
     schedule: [
       {
         value: String,
@@ -70,6 +63,17 @@ const RestaurantSchema = new mongoose.Schema({
         _id: false,
       },
     ],
+  },
+  privateSettings: {
+    _id: false,
+    orderMailReception: {
+      enabled: Boolean,
+      mails: [String],
+    },
+    pendingOrderAlert: {
+      enabled: Boolean,
+      interval: Number,
+    },
   },
   //foodSchema is nested in foodCategoriesSchema
   menu: [FoodCategorySchema],

@@ -45,8 +45,8 @@ router.post(
         "website",
         "phoneNumber",
         "adress",
-        "orderSettings",
-        "restaurantSettings",
+        "publicSettings",
+        "privateSettings",
         "menu",
       ])
     ) {
@@ -87,8 +87,8 @@ router.post(
       website: req.body.website,
       phoneNumber: req.body.phoneNumber,
       adress: req.body.adress,
-      orderSettings: req.body.orderSettings,
-      restaurantSettings: req.body.restaurantSettings,
+      publicSettings: req.body.publicSettings,
+      privateSettings: req.body.privateSettings,
       menu: foodCategories,
     });
 
@@ -116,37 +116,36 @@ router.post(
   "/updateRestaurantSettings",
   authenticateToken,
   catchAsyncErrors(async (req, res, next) => {
-    Restaurant.findOne({ uniqueValue: req.body.uniqueValue }).then(
-      (restaurant) => {
-        if (restaurant) {
-          //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
-          if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
-            throw new AppError(
-              "Update restaurant settings is Forbidden for this user",
-              403,
-              "ForbiddenError"
-            );
-          }
-          restaurant.name = req.body.name;
-          restaurant.mail = req.body.mail;
-          restaurant.adress = req.body.adress;
-          restaurant.phoneNumber = req.body.phoneNumber;
-          restaurant.website = req.body.website;
-          restaurant.restaurantSettings = req.body.restaurantSettings;
-          restaurant.orderSettings = req.body.orderSettings;
-          restaurant.save().then((savedRestaurant) => {
-            // Vérifiez si l'enregistrement a été sauvegardé avec succès
-            if (savedRestaurant === restaurant) {
-              return res.json(savedRestaurant);
-            } else {
-              throw new AppError("Failed to save restaurant settings");
-            }
-          });
-        } else {
-          throw new AppError("Restaurant Not Found", 404, "NotFoundError");
-        }
+    const restaurant = await Restaurant.findOne({
+      uniqueValue: req.body.uniqueValue,
+    });
+    if (restaurant) {
+      //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
+      if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
+        throw new AppError(
+          "Update restaurant settings is Forbidden for this user",
+          403,
+          "ForbiddenError"
+        );
       }
-    );
+      restaurant.name = req.body.name;
+      restaurant.mail = req.body.mail;
+      restaurant.adress = req.body.adress;
+      restaurant.phoneNumber = req.body.phoneNumber;
+      restaurant.website = req.body.website;
+      restaurant.publicSettings = req.body.publicSettings;
+      restaurant.privateSettings = req.body.privateSettings;
+      restaurant.save().then((savedRestaurant) => {
+        // Vérifiez si l'enregistrement a été sauvegardé avec succès
+        if (savedRestaurant === restaurant) {
+          return res.json(savedRestaurant);
+        } else {
+          throw new AppError("Failed to save restaurant settings");
+        }
+      });
+    } else {
+      throw new AppError("Restaurant Not Found", 404, "NotFoundError");
+    }
   })
 );
 

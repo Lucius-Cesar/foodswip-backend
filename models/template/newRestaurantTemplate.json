@@ -930,5 +930,112 @@
         }
       ]
     }
-  ]
+  ],
+  "publicSettings": {
+    "orderTypes": [
+      {
+        "value": 0,
+        "enabled": true
+      },
+      {
+        "value": 1,
+        "enabled": true
+      }
+    ],
+    "deliveryEstimate": {
+      "min": 45,
+      "max": 60
+    },
+    "deliveryFees": 5,
+    "deliveryMin": 20,
+    "takeAwayEstimate": 15,
+    "paymentMethods": [
+      {
+        "value": "cash",
+        "delivery": true,
+        "takeAway": true
+      },
+      {
+        "value": "bancontact",
+        "delivery": true,
+        "takeAway": true
+      }
+    ],
+    "schedule": [
+      {
+        "value": "monday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      },
+      {
+        "value": "tuesday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      },
+      {
+        "value": "wednesday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      },
+      {
+        "value": "thursday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      },
+      {
+        "value": "friday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      },
+      {
+        "value": "saturday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      },
+      {
+        "value": "sunday",
+        "services": [
+          {
+            "start": "00:00",
+            "end": "23:59"
+          }
+        ]
+      }
+    ],
+    "exceptionalClosings": []
+  },
+  "privateSettings": {
+    "pendingOrderAlert": {
+      "enabled": true,
+      "interval": 5
+    },
+    "orderMailReception": {
+      "enabled": true,
+      "mails": []
+    }
+  }
 }
