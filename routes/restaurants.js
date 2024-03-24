@@ -96,15 +96,53 @@ router.post(
   })
 );
 
-//get info relative to one specific restaurant by uniqueValue field.
-//This is the main route that allows get restaurant info, settings and menu for the eaterView
+//public restaurant data
 router.get(
-  "/:uniqueValue",
+  "/public/:uniqueValue",
+  catchAsyncErrors(async (req, res, next) => {
+    console.log(req.params.uniqueValue);
+    const restaurant = await Restaurant.findOne({
+      uniqueValue: req.params.uniqueValue.toLowerCase(),
+    })
+      .select("-privateSettings")
+      .populate("menu.foods");
+
+    if (!restaurant) {
+      throw new AppError("Restaurant Not Found", 404, "NotFoundError");
+    } else {
+      //only keep element with display = true for public data
+      restaurant.menu = restaurant.menu
+        .filter((foodCategory) => foodCategory.display === true) // Filtrer les catégories d'aliments
+        .map((foodCategory) => {
+          return {
+            ...foodCategory,
+            foods: foodCategory.foods.filter((food) => food.display === true), // Filtrer les aliments de chaque catégorie
+          };
+        });
+      return res.json(restaurant);
+    }
+  })
+);
+
+//public restaurant data
+router.get(
+  "/admin/:uniqueValue",
+  authenticateToken,
   catchAsyncErrors(async (req, res, next) => {
     const restaurant = await Restaurant.findOne({
       uniqueValue: req.params.uniqueValue.toLowerCase(),
     }).populate("menu.foods");
+    //
     if (restaurant) {
+      console.log(req.user);
+      //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
+      if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
+        throw new AppError(
+          "data access is Forbidden for this user",
+          403,
+          "ForbiddenError"
+        );
+      }
       return res.json(restaurant);
     } else {
       throw new AppError("Restaurant Not Found", 404, "NotFoundError");
@@ -113,7 +151,7 @@ router.get(
 );
 
 router.post(
-  "/updateRestaurantSettings",
+  "/admin/updateRestaurantSettings",
   authenticateToken,
   catchAsyncErrors(async (req, res, next) => {
     const restaurant = await Restaurant.findOne({
