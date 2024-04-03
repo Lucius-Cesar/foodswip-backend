@@ -6,16 +6,25 @@ const Restaurant = require("../models/restaurant");
 const Counter = require("../models/counter");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const AppError = require("../utils/AppError");
+const {
+  transporter,
+  orderCustomerMailHtml,
+  orderRestaurantMailHtml,
+} = require("../utils/email");
+
+const { multiplyMoney } = require("../utils/moneyCalculations");
+
+const nodemailer = require("nodemailer");
 
 router.post(
   "/addOrder",
   catchAsyncErrors(async (req, res, next) => {
-    //This route have a limiter of 1 request every 15 minutes by ip, see {postOrderLimiter} from @/middlewares/rateLimit imported in the app.js
+    // Vérification du corps de la requête
     if (
       !checkBody(req.body, [
         "mail",
         "phoneNumber",
-        "adress",
+        "address",
         "city",
         "postCode",
         "articles",
@@ -31,7 +40,7 @@ router.post(
       throw new AppError("Body is incorrect", 400, "BadRequestError");
     }
 
-    //check if restaurant is in the database
+    // Vérification si le restaurant existe dans la base de données
     const restaurantFound = await Restaurant.findOne({
       _id: req.body.restaurantId,
     });
@@ -39,27 +48,46 @@ router.post(
       throw new AppError("Restaurant not found", 404, "NotFoundError");
     }
 
+    // Date actuelle
     const currentDate = new Date();
+
+    // Récupération et incrémentation du numéro de commande
     const NewOrderNumber = await Counter.findOneAndUpdate(
       { _id: "orderNumber" },
       { $inc: { count: 1 } }
     );
 
-    //sort by foodCategory Index for the ticket
-    sortedArticles = req.body.articles.sort(
-      (a, b) => a.foodCategoryIndex - b.foodCategoryIndex
-    );
+    // Formatage des articles pour correspondre au modèle de base de données
+    const formattedArticles = req.body.articles.map((article) => {
+      article.selectedOptions = article.selectedOptions.map(
+        (option) => option.value
+      );
+      article.selectedSupplements = article.selectedSupplements.map(
+        (supplement) => supplement.value
+      );
+      article.sum = multiplyMoney(article.quantity, article.price); // Ajout d'un champ "sum"
+      return article;
+    });
+
+    // Tri des articles par index de catégorie alimentaire
+    formattedArticles.sort((a, b) => a.foodCategoryIndex - b.foodCategoryIndex);
+
+    // Création d'une nouvelle commande
     const newOrder = await Order.create({
       orderNumber: NewOrderNumber.count,
       customer: {
         mail: req.body.mail,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
         phoneNumber: req.body.phoneNumber,
-        adress: req.body.adress,
-        city: req.body.city,
-        postCode: req.body.postCode,
+        address: {
+          streetAddress: req.body.address,
+          city: req.body.city,
+          postCode: req.body.postCode,
+        },
         ip: req.ip,
       },
-      articles: sortedArticles,
+      articles: formattedArticles,
       articlesSum: req.body.articlesSum,
       totalSum: req.body.totalSum,
       creationDate: currentDate,
@@ -69,10 +97,58 @@ router.post(
       paymentMethod: req.body.paymentMethod,
       estimatedArrivalDate: req.body.estimatedArrivalDate,
       status: "completed",
-      statusHistory: [{ status: "completed", date: currentDate }], // Change this in the next versions with "pending"
+      statusHistory: [{ status: "completed", date: currentDate }],
       restaurantId: restaurantFound._id,
     });
-    return res.json(newOrder);
+
+    // Envoi d'un e-mail de confirmation au client
+    if (newOrder) {
+      const expeditorMail = process.env.MAIL;
+      const mailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      const customerMail = newOrder.customer.mail;
+      const mailToTheCustomer = await transporter.sendMail({
+        from: expeditorMail,
+        to: customerMail,
+        subject: `Merci pour votre commande chez ${restaurantFound.name}`,
+        html: orderCustomerMailHtml(newOrder, restaurantFound),
+      });
+
+      if (!mailToTheCustomer) {
+        throw new AppError(
+          "Error sending mail to the customer",
+          500,
+          "ErrorMailCustomer"
+        );
+      }
+
+      // Envoi d'un e-mail de confirmation au restaurant
+      if (restaurantFound.privateSettings.orderMailReception.enabled) {
+        for (
+          let i = 0;
+          i < restaurantFound.privateSettings.orderMailReception.mails.length;
+          i++
+        ) {
+          const restaurantMail =
+            restaurantFound.privateSettings.orderMailReception.mails[i];
+          if (mailRegex.test(restaurantMail)) {
+            const mailToTheRestaurant = await transporter.sendMail({
+              from: expeditorMail,
+              to: restaurantMail,
+              subject: `Merci pour votre commande chez ${restaurantFound.name}`,
+              html: orderRestaurantMailHtml(newOrder, restaurantFound),
+            });
+            if (!mailToTheRestaurant) {
+              throw new AppError(
+                "Error sending mail to the restaurant",
+                500,
+                "ErrorMailRestaurant"
+              );
+            }
+          }
+        }
+      }
+      return res.json(newOrder);
+    }
   })
 );
 

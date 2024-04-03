@@ -3,7 +3,7 @@
   "uniqueValue": "dodopizza",
   "mail": "restaurant@dodopizza.com",
   "website": "www.dodopizza.com",
-  "adress": {
+  "address": {
     "street": "Rue des Dodos",
     "streetNumber": 1,
     "postCode": 1000,

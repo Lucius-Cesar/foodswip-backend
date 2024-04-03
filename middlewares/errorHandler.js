@@ -4,9 +4,11 @@ const errorHandler = (err, req, res, next) => {
   const message = err.message || "Something went wrong.";
   // returns error status code and message
   return res.status(statusCode).json({
-    name: err.name,
-    status: statusCode,
-    message: message,
+    error: {
+      name: err.name,
+      status: statusCode,
+      message: message,
+    },
   });
 };
 

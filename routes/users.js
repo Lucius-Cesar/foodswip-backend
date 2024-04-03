@@ -5,6 +5,8 @@ const router = express.Router();
 const RefreshToken = require("../models/refreshToken");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const AppError = require("../utils/AppError");
+const User = require("../models/user");
+const authenticateToken = require("../middlewares/authenticateToken");
 
 function generateAccessToken(userInfo) {
   return jwt.sign(userInfo, process.env.JWT_ACCESS_SECRET, {
@@ -29,7 +31,7 @@ router.post(
           throw new AppError(
             "Invalid username or password",
             401,
-            "InvalidCredentialsError"
+            "ErrorInvalidCredentials"
           );
         }
         req.login(user, { session: false }, async (error) => {
@@ -125,6 +127,28 @@ router.get(
           "ErrorNotFound"
         );
       }
+    }
+  })
+);
+
+router.post(
+  "/updatePassword",
+  authenticateToken,
+  catchAsyncErrors(async (req, res, next) => {
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findOne({ mail: req.user.username });
+    if (!user) {
+      throw new AppError("User Not Found", 404, "ErrorUserNotFound");
+    }
+    const validate = await user.isValidPassword(currentPassword);
+    if (!validate) {
+      throw new AppError("Incorrect Password", 401, "ErrorInvalidCredentials");
+    } else {
+      user.password = newPassword;
+      await user.save();
+      res.json({
+        success: true,
+      });
     }
   })
 );

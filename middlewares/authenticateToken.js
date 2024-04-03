@@ -10,6 +10,7 @@ function authenticateToken(req, res, next) {
   if (!token) {
     return res.sendStatus(401); // Unauthorized
   }
+  
 
   jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, user) => {
     if (err) {

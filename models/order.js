@@ -1,26 +1,28 @@
 const mongoose = require("mongoose");
-const OptionSupplementSchema = new mongoose.Schema({
-  value: String,
-  price: Number,
-  _id: false,
-});
+
 const ArticleSchema = new mongoose.Schema({
   value: String,
   food: { type: mongoose.Schema.Types.ObjectId, ref: "food" },
   quantity: Number,
-  selectedOptions: [OptionSupplementSchema],
-  selectedSupplements: [OptionSupplementSchema],
+  selectedOptions: [String],
+  selectedSupplements: [String],
+  price: Number,
+  sum: Number,
   foodCategoryIndex: Number,
 });
 
 const OrderSchema = {
   orderNumber: Number,
   customer: {
+    firstname: String,
+    lastname: String,
     mail: String,
     phoneNumber: String,
-    adress: String,
-    city: String,
-    postCode: String,
+    address: {
+      streetAddress: String,
+      postCode: String,
+      city: String,
+    },
     ip: String,
   },
   articles: [ArticleSchema],

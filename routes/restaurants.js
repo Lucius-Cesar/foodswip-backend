@@ -44,7 +44,7 @@ router.post(
         "mail",
         "website",
         "phoneNumber",
-        "adress",
+        "address",
         "publicSettings",
         "privateSettings",
         "menu",
@@ -62,7 +62,7 @@ router.post(
 
     const uniqueValue = await generateUniqueValue(
       req.body.name,
-      req.body.adress.city
+      req.body.address.city
     );
 
     const foodCategories = await Promise.all(
@@ -86,7 +86,7 @@ router.post(
       mail: req.body.mail,
       website: req.body.website,
       phoneNumber: req.body.phoneNumber,
-      adress: req.body.adress,
+      address: req.body.address,
       publicSettings: req.body.publicSettings,
       privateSettings: req.body.privateSettings,
       menu: foodCategories,
@@ -100,7 +100,6 @@ router.post(
 router.get(
   "/public/:uniqueValue",
   catchAsyncErrors(async (req, res, next) => {
-    console.log(req.params.uniqueValue);
     const restaurant = await Restaurant.findOne({
       uniqueValue: req.params.uniqueValue.toLowerCase(),
     })
@@ -134,7 +133,6 @@ router.get(
     }).populate("menu.foods");
     //
     if (restaurant) {
-      console.log(req.user);
       //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
       if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
         throw new AppError(
@@ -168,7 +166,7 @@ router.post(
       }
       restaurant.name = req.body.name;
       restaurant.mail = req.body.mail;
-      restaurant.adress = req.body.adress;
+      restaurant.address = req.body.address;
       restaurant.phoneNumber = req.body.phoneNumber;
       restaurant.website = req.body.website;
       restaurant.publicSettings = req.body.publicSettings;
