@@ -96,7 +96,6 @@ router.get(
     if (!refreshToken) {
       throw new AppError("No token found", 401, "ErrorUnauthorized");
     } else {
-      console.log(refreshToken);
       const tokenFound = await RefreshToken.findOne({ token: refreshToken });
 
       if (tokenFound) {
