@@ -62,9 +62,9 @@ router.post(
           });
           //send refreshToken inside cookie
           res.cookie("token", refreshToken, {
-            httpOnly: false,
-            sameSite: false,
-            secure: false,
+            httpOnly: true,
+            sameSite: true,
+            secure: true,
           });
           // send accessToken in res.json
           return res.json({
@@ -85,6 +85,7 @@ router.post(
 router.delete("/logOut", async (req, res) => {
   const refreshToken = req.cookies.token;
   await RefreshToken.deleteOne({ token: refreshToken });
+  res.clearCookie("token");
   res.json({ succes: true });
 });
 
@@ -95,7 +96,9 @@ router.get(
     if (!refreshToken) {
       throw new AppError("No token found", 401, "ErrorUnauthorized");
     } else {
+      console.log(refreshToken);
       const tokenFound = await RefreshToken.findOne({ token: refreshToken });
+
       if (tokenFound) {
         jwt.verify(
           refreshToken,

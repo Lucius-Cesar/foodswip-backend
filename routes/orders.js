@@ -134,7 +134,7 @@ router.post(
             const mailToTheRestaurant = await transporter.sendMail({
               from: expeditorMail,
               to: restaurantMail,
-              subject: `Merci pour votre commande chez ${restaurantFound.name}`,
+              subject: `Nouvelle commande ${newOrder.orderNumber}`,
               html: orderRestaurantMailHtml(newOrder, restaurantFound),
             });
             if (!mailToTheRestaurant) {

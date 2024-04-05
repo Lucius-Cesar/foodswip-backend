@@ -56,7 +56,8 @@ typings/
 
 # dotenv environment variables file
 .env
-
+#https self-signed certificate for local dev
+./certificates/
 # next.js build output
 .next
 

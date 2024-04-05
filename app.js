@@ -6,7 +6,6 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
-const https = require("https");
 const helmet = require("helmet");
 const passport = require("passport");
 require("./passport");
@@ -18,6 +17,7 @@ const usersRouter = require("./routes/users");
 const restaurantsRouter = require("./routes/restaurants");
 const ordersRouter = require("./routes/orders");
 const { prototype } = require("module");
+const { applyDefaults } = require("./models/restaurant");
 
 const app = express();
 app.set("trust proxy", "loopback");
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
@@ -51,11 +51,5 @@ app.use("/orders", ordersRouter);
 
 //error handler
 app.use(errorHandler);
-/*https.createServer(
-    key:'',
-    cert:''
-).listen(PORT, () => {
-    console.log(`Listening on port ${prototype}`)
-}) */
 
 module.exports = app;
