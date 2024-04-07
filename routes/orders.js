@@ -24,7 +24,8 @@ router.post(
       !checkBody(req.body, [
         "mail",
         "phoneNumber",
-        "address",
+        "street",
+        "streetNumber",
         "city",
         "postCode",
         "articles",
@@ -81,7 +82,8 @@ router.post(
         lastname: req.body.lastname,
         phoneNumber: req.body.phoneNumber,
         address: {
-          streetAddress: req.body.address,
+          street: req.body.street,
+          streetNumber: req.body.streetNumber,
           city: req.body.city,
           postCode: req.body.postCode,
         },
@@ -103,13 +105,17 @@ router.post(
 
     // Envoi d'un e-mail de confirmation au client
     if (newOrder) {
-      const expeditorMail = process.env.MAIL;
+      const expeditor = {
+        name: "Foodswip",
+        address: process.env.MAIL,
+      };
+
       const mailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       const customerMail = newOrder.customer.mail;
       const mailToTheCustomer = await transporter.sendMail({
-        from: expeditorMail,
+        from: expeditor,
         to: customerMail,
-        subject: `Merci pour votre commande chez ${restaurantFound.name}`,
+        subject: `Merci pour votre commande chez ${restaurantFound.name} #${newOrder.orderNumber}`,
         html: orderCustomerMailHtml(newOrder, restaurantFound),
       });
 
@@ -132,9 +138,9 @@ router.post(
             restaurantFound.privateSettings.orderMailReception.mails[i];
           if (mailRegex.test(restaurantMail)) {
             const mailToTheRestaurant = await transporter.sendMail({
-              from: expeditorMail,
+              from: expeditor,
               to: restaurantMail,
-              subject: `Nouvelle commande ${newOrder.orderNumber}`,
+              subject: `Nouvelle commande #${newOrder.orderNumber}`,
               html: orderRestaurantMailHtml(newOrder, restaurantFound),
             });
             if (!mailToTheRestaurant) {

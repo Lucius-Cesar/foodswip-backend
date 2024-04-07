@@ -226,6 +226,9 @@ const formatOrderToHtml = (order, restaurant) => {
         <td>${order.totalSum}</td>
     </tr>
     </table>
+    <p><strong>Note de commande:</strong> ${
+      order.note ? order.note : "Aucune"
+    }</p>
     <p><strong>Type de commande:</strong> ${
       order.orderType === 0
         ? "Livraison"
@@ -253,7 +256,7 @@ const formatCustomerDataToHtml = (order) => {
         </tr>
         <tr>
             <th>Adresse:</th>
-            <td>${order.customer.address.streetAddress}</td>
+            <td>${order.customer.address.street} ${order.customer.address.streetNumber}</td>
         </tr>
         <tr>
             <th>Ville:</th>
@@ -469,8 +472,8 @@ ${
 const transporter = nodemailer.createTransport({
   name: "foodswip.com",
   host: "ssl0.ovh.net",
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.MAIL,
     pass: process.env.MAIL_PASS,

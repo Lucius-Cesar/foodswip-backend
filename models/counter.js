@@ -7,5 +7,3 @@ const counterSchema = {
 };
 const Counter = mongoose.model("counter", counterSchema);
 module.exports = Counter;
-
-// Counter.create({ _id: "orderNumber", count: 233140 });

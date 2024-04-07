@@ -19,7 +19,8 @@ const OrderSchema = {
     mail: String,
     phoneNumber: String,
     address: {
-      streetAddress: String,
+      street: String,
+      streetNumber: String,
       postCode: String,
       city: String,
     },
