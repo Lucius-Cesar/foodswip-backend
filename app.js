@@ -9,7 +9,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const passport = require("passport");
 require("./passport");
-
 const errorHandler = require("./middlewares/errorHandler");
 
 const indexRouter = require("./routes/index");
@@ -22,10 +21,17 @@ const { applyDefaults } = require("./models/restaurant");
 const app = express();
 app.set("trust proxy", "loopback");
 
+// To add large paylod for example route addRestaurant uncomment it and disabled the catchAsyncError function englobling the route
+
+/*
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
+*/
+
 app.use(logger("dev"));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //app.use(cors());

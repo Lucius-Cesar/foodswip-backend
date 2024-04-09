@@ -33,68 +33,65 @@ const generateUniqueValue = async (name, city) => {
 };
 
 // create a new restaurant Document, this requet is IP limited
-router.post(
-  "/addRestaurant",
-  catchAsyncErrors(async (req, res, next) => {
-    const allowedIPs = ["::ffff:127.0.0.1"];
-    const clientIP = req.ip;
-    if (
-      !checkBody(req.body, [
-        "name",
-        "mail",
-        "website",
-        "phoneNumber",
-        "address",
-        "publicSettings",
-        "privateSettings",
-        "menu",
-      ])
-    ) {
-      throw new AppError("Body is incorrect", 400, "BadRequestError");
-    }
-    if (!allowedIPs.includes(clientIP)) {
-      throw new AppError(
-        "This IP address is not allowed for this route",
-        400,
-        "ForbiddenError"
-      );
-    }
-
-    const uniqueValue = await generateUniqueValue(
-      req.body.name,
-      req.body.address.city
+router.post("/addRestaurant", async (req, res, next) => {
+  const allowedIPs = ["::ffff:127.0.0.1"];
+  const clientIP = req.ip;
+  if (
+    !checkBody(req.body, [
+      "name",
+      "mail",
+      "website",
+      "phoneNumber",
+      "address",
+      "publicSettings",
+      "privateSettings",
+      "menu",
+    ])
+  ) {
+    throw new AppError("Body is incorrect", 400, "BadRequestError");
+  }
+  if (!allowedIPs.includes(clientIP)) {
+    throw new AppError(
+      "This IP address is not allowed for this route",
+      400,
+      "ForbiddenError"
     );
+  }
 
-    const foodCategories = await Promise.all(
-      req.body.menu.map(async (foodCategory) => {
-        return {
-          ...foodCategory,
-          foods: await Promise.all(
-            foodCategory.foods.map(async (food) => {
-              food.options.items?.sort((a, b) => a.price - b.price);
-              const newFood = await Food.create(food);
-              return newFood._id;
-            })
-          ),
-        };
-      })
-    );
+  const uniqueValue = await generateUniqueValue(
+    req.body.name,
+    req.body.address.city
+  );
 
-    const newRestaurant = await Restaurant.create({
-      name: req.body.name,
-      uniqueValue: uniqueValue,
-      mail: req.body.mail,
-      website: req.body.website,
-      phoneNumber: req.body.phoneNumber,
-      address: req.body.address,
-      publicSettings: req.body.publicSettings,
-      privateSettings: req.body.privateSettings,
-      menu: foodCategories,
-    });
+  const foodCategories = await Promise.all(
+    req.body.menu.map(async (foodCategory) => {
+      return {
+        ...foodCategory,
+        foods: await Promise.all(
+          foodCategory.foods.map(async (food) => {
+            food.options.items?.sort((a, b) => a.price - b.price);
+            const newFood = await Food.create(food);
+            return newFood._id;
+          })
+        ),
+      };
+    })
+  );
 
-    return res.json(newRestaurant);
-  })
-);
+  const newRestaurant = await Restaurant.create({
+    name: req.body.name,
+    uniqueValue: uniqueValue,
+    mail: req.body.mail,
+    website: req.body.website,
+    phoneNumber: req.body.phoneNumber,
+    address: req.body.address,
+    publicSettings: req.body.publicSettings,
+    privateSettings: req.body.privateSettings,
+    menu: foodCategories,
+  });
+
+  return res.json(newRestaurant);
+});
 
 //public restaurant data
 router.get(

@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const mg = require("nodemailer-mailgun-transport");
 
 /* 
 const order = {
@@ -469,16 +470,15 @@ ${
 `;
 };
 
-const transporter = nodemailer.createTransport({
-  name: "foodswip.com",
-  host: "ssl0.ovh.net",
-  port: 465,
-  secure: true,
+const options = {
   auth: {
-    user: process.env.MAIL,
-    pass: process.env.MAIL_PASS,
+    api_key: process.env.MAILGUN_API_KEY,
+    domain: "foodswip.com",
   },
-});
+  host: "api.eu.mailgun.net",
+};
+
+const transporter = nodemailer.createTransport(mg(options));
 
 module.exports = {
   transporter,

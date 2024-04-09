@@ -105,10 +105,7 @@ router.post(
 
     // Envoi d'un e-mail de confirmation au client
     if (newOrder) {
-      const expeditor = {
-        name: "Foodswip",
-        address: process.env.MAIL,
-      };
+      const expeditor = `"Foodswip" <noreply@foodswip.com>`;
 
       const mailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       const customerMail = newOrder.customer.mail;
