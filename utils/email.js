@@ -473,7 +473,7 @@ ${
 const options = {
   auth: {
     api_key: process.env.MAILGUN_API_KEY,
-    domain: "foodswip.com",
+    domain: "foodswip-order.com",
   },
   host: "api.eu.mailgun.net",
 };

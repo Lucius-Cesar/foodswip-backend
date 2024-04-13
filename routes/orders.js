@@ -105,9 +105,7 @@ router.post(
 
     // Envoi d'un e-mail de confirmation au client
     if (newOrder) {
-      const expeditor = `"Foodswip" <noreply@foodswip.com>`;
-
-      const mailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      const expeditor = `"Foodswip" <noreply@foodswip-order.com>`;
       const customerMail = newOrder.customer.mail;
       const mailToTheCustomer = await transporter.sendMail({
         from: expeditor,
@@ -126,32 +124,24 @@ router.post(
 
       // Envoi d'un e-mail de confirmation au restaurant
       if (restaurantFound.privateSettings.orderMailReception.enabled) {
-        for (
-          let i = 0;
-          i < restaurantFound.privateSettings.orderMailReception.mails.length;
-          i++
-        ) {
-          const restaurantMail =
-            restaurantFound.privateSettings.orderMailReception.mails[i];
-          if (mailRegex.test(restaurantMail)) {
-            const mailToTheRestaurant = await transporter.sendMail({
-              from: expeditor,
-              to: restaurantMail,
-              subject: `Nouvelle commande #${newOrder.orderNumber}`,
-              html: orderRestaurantMailHtml(newOrder, restaurantFound),
-            });
-            if (!mailToTheRestaurant) {
-              throw new AppError(
-                "Error sending mail to the restaurant",
-                500,
-                "ErrorMailRestaurant"
-              );
-            }
-          }
+        const restaurantMail =
+          restaurantFound.privateSettings.orderMailReception.mail;
+        const mailToTheRestaurant = await transporter.sendMail({
+          from: expeditor,
+          to: restaurantMail,
+          subject: `Nouvelle commande #${newOrder.orderNumber}`,
+          html: orderRestaurantMailHtml(newOrder, restaurantFound),
+        });
+        if (!mailToTheRestaurant) {
+          throw new AppError(
+            "Error sending mail to the restaurant",
+            500,
+            "ErrorMailRestaurant"
+          );
         }
       }
-      return res.json(newOrder);
     }
+    return res.json(newOrder);
   })
 );
 

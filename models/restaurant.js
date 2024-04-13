@@ -69,7 +69,7 @@ const RestaurantSchema = new mongoose.Schema({
     _id: false,
     orderMailReception: {
       enabled: Boolean,
-      mails: [String],
+      mail: String,
     },
     pendingOrderAlert: {
       enabled: Boolean,
