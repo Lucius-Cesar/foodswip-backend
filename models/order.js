@@ -13,6 +13,7 @@ const ArticleSchema = new mongoose.Schema({
 
 const OrderSchema = {
   orderNumber: Number,
+  restaurantUniqueValue: String,
   customer: {
     firstname: String,
     lastname: String,
@@ -37,6 +38,8 @@ const OrderSchema = {
   estimatedArrivalDate: Date,
   status: String,
   statusHistory: [{ status: String, date: Date, _id: false }],
+  restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
+  restaurantUniqueValue: String,
 };
 
 const Order = mongoose.model("order", OrderSchema);

@@ -100,7 +100,8 @@ router.post(
       estimatedArrivalDate: req.body.estimatedArrivalDate,
       status: "completed",
       statusHistory: [{ status: "completed", date: currentDate }],
-      restaurantId: restaurantFound._id,
+      restaurant: restaurantFound._id,
+      restaurantUniqueValue: restaurantFound.uniqueValue,
     });
 
     // Envoi d'un e-mail de confirmation au client
