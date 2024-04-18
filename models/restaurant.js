@@ -35,6 +35,7 @@ const RestaurantSchema = new mongoose.Schema({
     },
     deliveryFees: Number,
     deliveryMin: Number,
+    deliveryPostCodes: [String],
     takeAwayEstimate: Number,
     paymentMethods: [
       {

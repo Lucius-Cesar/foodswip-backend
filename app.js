@@ -23,10 +23,8 @@ app.set("trust proxy", "loopback");
 
 // To add large paylod for example route addRestaurant uncomment it and disabled the catchAsyncError function englobling the route
 
-/*
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
-*/
 
 app.use(logger("dev"));
 app.use(cookieParser());

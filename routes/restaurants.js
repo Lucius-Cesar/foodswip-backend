@@ -32,6 +32,23 @@ const generateUniqueValue = async (name, city) => {
   return uniqueValue;
 };
 
+async function deleteRestaurant(restaurantId) {
+  const restaurantFound = await Restaurant.findOne({ _id: restaurantId });
+
+  const foodIds = Object.values(restaurantFound.menu)
+    .map((category) => category.foods.map((food) => food._id))
+    .flat();
+
+  console.log(foodIds);
+
+  // delete the foods linked to Restaurant
+  await Food.deleteMany({ _id: { $in: foodIds } });
+
+  //delete the restaurant
+  await Restaurant.deleteOne({ _id: restaurantFound._id });
+}
+
+//routes
 // create a new restaurant Document, this requet is IP limited
 router.post("/addRestaurant", async (req, res, next) => {
   const allowedIPs = ["::ffff:127.0.0.1"];
@@ -161,6 +178,12 @@ router.post(
           "ForbiddenError"
         );
       }
+      //avoid deliveryPostCodes containing empty string
+      req.body.publicSettings.deliveryPostCodes =
+        req.body.publicSettings.deliveryPostCodes.filter(
+          (postCode) => postCode !== ""
+        );
+
       restaurant.name = req.body.name;
       restaurant.mail = req.body.mail;
       restaurant.address = req.body.address;
@@ -181,5 +204,16 @@ router.post(
     }
   })
 );
+
+//delete restaurant and all document associated with
+/*
+router.delete(
+  "/:restaurantId",
+  catchAsyncErrors(async (req, res, next) => {
+    deleteRestaurant(req.params.restaurantId);
+    res.json("Le restaurant a été supprimé avec succès");
+  })
+);
+*/
 
 module.exports = router;
