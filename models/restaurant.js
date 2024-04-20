@@ -22,6 +22,11 @@ const RestaurantSchema = new mongoose.Schema({
   website: String,
   publicSettings: {
     _id: false,
+    statusOverride: {
+      open: Boolean,
+      start: Date,
+      end: Date,
+    },
     orderTypes: [
       {
         value: Number,
@@ -79,6 +84,19 @@ const RestaurantSchema = new mongoose.Schema({
   },
   //foodSchema is nested in foodCategoriesSchema
   menu: [FoodCategorySchema],
+});
+
+// Middleware to remove associated foods before removing a restaurant
+RestaurantSchema.pre("remove", function (next) {
+  // Remove all foods associated with this restaurant
+  mongoose
+    .model("food")
+    .deleteMany({ _id: { $in: this.menu.foods } }, (err) => {
+      if (err) {
+        return next(err);
+      }
+      next();
+    });
 });
 
 const Restaurant = mongoose.model("restaurant", RestaurantSchema);

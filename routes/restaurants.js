@@ -32,6 +32,7 @@ const generateUniqueValue = async (name, city) => {
   return uniqueValue;
 };
 
+/*
 async function deleteRestaurant(restaurantId) {
   const restaurantFound = await Restaurant.findOne({ _id: restaurantId });
 
@@ -39,14 +40,13 @@ async function deleteRestaurant(restaurantId) {
     .map((category) => category.foods.map((food) => food._id))
     .flat();
 
-  console.log(foodIds);
-
   // delete the foods linked to Restaurant
   await Food.deleteMany({ _id: { $in: foodIds } });
 
   //delete the restaurant
   await Restaurant.deleteOne({ _id: restaurantFound._id });
 }
+*/
 
 //routes
 // create a new restaurant Document, this requet is IP limited
@@ -80,13 +80,16 @@ router.post("/addRestaurant", async (req, res, next) => {
     req.body.address.city
   );
 
+  //sort food options by price
+
   const foodCategories = await Promise.all(
     req.body.menu.map(async (foodCategory) => {
       return {
         ...foodCategory,
         foods: await Promise.all(
           foodCategory.foods.map(async (food) => {
-            food.options.items?.sort((a, b) => a.price - b.price);
+            //sort options by ascending price
+            //food.options.items?.sort((a, b) => a.price - b.price);
             const newFood = await Food.create(food);
             return newFood._id;
           })

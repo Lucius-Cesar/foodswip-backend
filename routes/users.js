@@ -14,6 +14,7 @@ function generateAccessToken(userInfo) {
   });
 }
 
+/*
 router.post(
   "/signup",
   passport.authenticate("signup", { session: false }),
@@ -21,6 +22,7 @@ router.post(
     res.json(req.user);
   }
 );
+*/
 
 router.post(
   "/login",
