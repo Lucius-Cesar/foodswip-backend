@@ -189,19 +189,25 @@ const formatOrderToHtml = (order, restaurant) => {
         <tr>
             <th>Quantité</th>
             <th>Article</th>
-            <th>Description</th>
             <th>Prix</th>
         </tr>
     `;
 
   order.articles.forEach((article, i) => {
+    const selectedOptionsWithSpaces = article.selectedOptions.map(
+      (option) => `<br>&nbsp;&nbsp;&nbsp;&nbsp;${option}`
+    );
+    const selectedSupplementsWithSpaces = article.selectedSupplements.map(
+      (supplement) => `<br>&nbsp;&nbsp;+&nbsp;${supplement}`
+    );
+
     html += `
         <tr>
             <td>${article.quantity}</td>
-            <td>${article.value}</td>
-            <td>${article.selectedOptions.join(
-              ", "
-            )} <br> ${article.selectedSupplements.join(", ")}</td>
+            <td><strong>${article.value}</strong>
+              ${selectedOptionsWithSpaces.join("")}
+              ${selectedSupplementsWithSpaces.join("")}
+            </td>
             <td>${article.sum}</td>
         </tr>`;
   });
@@ -211,7 +217,7 @@ const formatOrderToHtml = (order, restaurant) => {
     order.orderType === 0
       ? `
   <tr>
-  <td colspan="3"><strong>Frais de livraison</strong></td>
+  <td colspan="2"><strong>Frais de livraison</strong></td>
  
     <td>${restaurant.publicSettings.deliveryFees}</td>
   
@@ -223,7 +229,7 @@ const formatOrderToHtml = (order, restaurant) => {
   }
 
     <tr>
-        <td colspan="3"><strong>Total</strong></td>
+        <td colspan="2"><strong>Total</strong></td>
         <td>${order.totalSum}</td>
     </tr>
     </table>
