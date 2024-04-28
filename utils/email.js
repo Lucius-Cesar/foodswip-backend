@@ -181,6 +181,10 @@ const restaurant = {
 };
 */
 const formatOrderToHtml = (order, restaurant) => {
+  const formattedEstimatedArrivalDate = `${order.estimatedArrivalDate.getHours()}:${String(
+    order.estimatedArrivalDate.getMinutes()
+  ).padStart(2, "0")}`;
+
   let html = `
   <div class = "orderData">
   <h3>Détails de la commande</h2>
@@ -233,18 +237,20 @@ const formatOrderToHtml = (order, restaurant) => {
         <td>${order.totalSum}</td>
     </tr>
     </table>
-    <p><strong>Note de commande:</strong> ${
+    <p>Note de commande: <span id = 'bolder'> ${
       order.note ? order.note : "Aucune"
-    }</p>
-    <p><strong>Type de commande:</strong> ${
+    }</span> </p>
+    <p>Heure confirmée:  <span id = 'bolder'>${formattedEstimatedArrivalDate}</span> </p>
+    <p>Type de commande:  <span id = 'bolder'> ${
       order.orderType === 0
         ? "Livraison"
         : order.orderType === 1
         ? "À emporter"
         : ""
     }</p>
-    <p><strong>Moyen de paiement:</strong> ${order.paymentMethod}</p>
-    <p><strong>Numéro de commande:</strong> ${order.orderNumber}</p>`;
+    <p>Moyen de paiement:   <span id = 'bolder'>${
+      order.paymentMethod
+    } </span> </p>`;
   html += `
       </table>
     </div>
@@ -323,6 +329,9 @@ const orderCustomerMailHtml = (order, restaurant) => {
         text-align: center;
         color: #999;
         font-size: 0.8em;
+    }
+    #bolder {
+      font-weight: bolder;
     }
     table {
         width: 100%;
@@ -429,6 +438,10 @@ const orderRestaurantMailHtml = (order, restaurant) => {
           color: #999;
           font-size: 0.8em;
       }
+      #bolder {
+        font-weight: bolder;
+        color: red;
+      }
       table {
           width: 100%;
           border-collapse: collapse;
@@ -453,14 +466,10 @@ const orderRestaurantMailHtml = (order, restaurant) => {
   <body>
       <div class = "container"> 
       <div class="intro">
-      <h1>Nouvelle commande passée à ${formattedOrderCreationDate}</h1>
-${
-  order.orderType === 0
-    ? `La commande doit être livrée au plus tard pour ${formattedEstimatedArrivalDate}`
-    : order.orderType === 1
-    ? `Le client passera l'emporter aux alentours de ${formattedEstimatedArrivalDate}`
-    : ""
-}
+      <h1>${
+        order.orderType === 0 ? "LIVRAISON" : "À EMPORTER"
+      } pour ${formattedEstimatedArrivalDate}</h1>
+
 </p>
       <p>Si des informations doivent être transmises au client, veuillez l'appeller au <span>${
         order.customer.phoneNumber

@@ -32,8 +32,26 @@ const generateUniqueValue = async (name, city) => {
   return uniqueValue;
 };
 
-/*
-async function deleteRestaurant(restaurantId) {
+createFoods = async (menu) => {
+  const menuWithFoodIds = await Promise.all(
+    menu.map(async (foodCategory) => {
+      return {
+        ...foodCategory,
+        foods: await Promise.all(
+          foodCategory.foods.map(async (food) => {
+            //sort options by ascending price
+            //food.options.items?.sort((a, b) => a.price - b.price);
+            const newFood = await Food.create(food);
+            return newFood._id;
+          })
+        ),
+      };
+    })
+  );
+  return menuWithFoodIds;
+};
+
+async function removeFoodRestaurant(restaurantId) {
   const restaurantFound = await Restaurant.findOne({ _id: restaurantId });
 
   const foodIds = Object.values(restaurantFound.menu)
@@ -46,7 +64,6 @@ async function deleteRestaurant(restaurantId) {
   //delete the restaurant
   await Restaurant.deleteOne({ _id: restaurantFound._id });
 }
-*/
 
 //routes
 // create a new restaurant Document, this requet is IP limited
@@ -80,23 +97,7 @@ router.post("/addRestaurant", async (req, res, next) => {
     req.body.address.city
   );
 
-  //sort food options by price
-
-  const foodCategories = await Promise.all(
-    req.body.menu.map(async (foodCategory) => {
-      return {
-        ...foodCategory,
-        foods: await Promise.all(
-          foodCategory.foods.map(async (food) => {
-            //sort options by ascending price
-            //food.options.items?.sort((a, b) => a.price - b.price);
-            const newFood = await Food.create(food);
-            return newFood._id;
-          })
-        ),
-      };
-    })
-  );
+  const menuWithFoodIds = await createFoods(req.body.menu);
 
   const newRestaurant = await Restaurant.create({
     name: req.body.name,
@@ -107,7 +108,7 @@ router.post("/addRestaurant", async (req, res, next) => {
     address: req.body.address,
     publicSettings: req.body.publicSettings,
     privateSettings: req.body.privateSettings,
-    menu: foodCategories,
+    menu: menuWithFoodIds,
   });
 
   return res.json(newRestaurant);
@@ -209,12 +210,43 @@ router.post(
 );
 
 //delete restaurant and all document associated with
-/*
-router.delete(
+
+/*router.delete(
   "/:restaurantId",
   catchAsyncErrors(async (req, res, next) => {
-    deleteRestaurant(req.params.restaurantId);
+    removeFoodRestaurant(req.params.restaurantId,true);
     res.json("Le restaurant a été supprimé avec succès");
+  })
+);
+*/
+
+/*router.delete(
+  "menu/:restaurantId",
+  catchAsyncErrors(async (req, res, next) => {
+    removeFoodRestaurant(req.params.restaurantId,false);
+    res.json("Le menu a été supprimé avec succès");
+  })
+);
+*/
+
+/*
+router.post(
+  "/updateMenu",
+  catchAsyncErrors(async (req, res, next) => {
+    const restaurantFound = await Restaurant.findOne({
+      _id: req.body._id,
+    });
+    const foodIds = Object.values(restaurantFound.menu)
+      .map((category) => category.foods.map((food) => food._id))
+      .flat();
+
+    // delete the foods linked to Restaurant
+    await Food.deleteMany({ _id: { $in: foodIds } });
+
+    const updatedMenu = await createFoods(req.body.menu);
+    restaurantFound.menu = updatedMenu;
+    await restaurantFound.save();
+    res.json("Le menu a été modifié avec succès");
   })
 );
 */
