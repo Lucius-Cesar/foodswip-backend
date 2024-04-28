@@ -260,13 +260,17 @@ const formatOrderToHtml = (order, restaurant) => {
 
 const formatCustomerDataToHtml = (order) => {
   return `
-  <div class = "customerData">
-    <h3>Coordonnées du client</h2>
+  <div class="customerData">
+    <h3>Coordonnées du client</h3>
     <table>
         <tr>
             <th>Nom:</th>
             <td>${order.customer.lastname} ${order.customer.firstname}</td>
         </tr>
+        ${
+          //if delivery print the adress
+          order.orderType === 0
+            ? `
         <tr>
             <th>Adresse:</th>
             <td>${order.customer.address.street} ${order.customer.address.streetNumber}</td>
@@ -275,13 +279,16 @@ const formatCustomerDataToHtml = (order) => {
             <th>Ville:</th>
             <td>${order.customer.address.postCode} ${order.customer.address.city}</td>
         </tr>
+        `
+            : ""
+        }
         <tr>
             <th>Téléphone:</th>
             <td>${order.customer.phoneNumber}</td>
         </tr>
     </table> 
-    </div>
-    `;
+  </div>
+  `;
 };
 
 const orderCustomerMailHtml = (order, restaurant) => {
