@@ -229,7 +229,6 @@ router.post(
 );
 */
 
-/*
 router.post(
   "/updateMenu",
   catchAsyncErrors(async (req, res, next) => {
@@ -249,6 +248,5 @@ router.post(
     res.json("Le menu a été modifié avec succès");
   })
 );
-*/
 
 module.exports = router;

@@ -34,7 +34,9 @@ passport.use(
     },
     async (mail, password, done) => {
       try {
-        const user = await User.findOne({ mail });
+        const user = await User.findOne({
+          mail: { $regex: new RegExp(mail, "i") },
+        });
         if (!user) {
           return done(null, false, { message: "User not found" });
         }
