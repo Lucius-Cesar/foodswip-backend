@@ -306,25 +306,7 @@ router.post(
 );
 */
 
-router.post(
-  "/createMenu",
-  catchAsyncErrors(async (req, res, next) => {
-    const restaurantFound = await Restaurant.findOne({
-      uniqueValue: req.body.uniqueValue,
-    });
-    if (!restaurantFound) {
-      throw new AppError("Restaurant Not Foud", 404, "ErrorNotFound");
-    }
-    // delete the foods linked to Restaurant
-    await Food.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
-    await Option.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
-    const newMenu = await createMenu(req.body.menu, req.body.uniqueValue);
-    restaurantFound.menu = newMenu;
-    restaurantFound.save();
-    res.json("Le menu a été créé avec succès");
-  })
-);
-
+/*
 router.post(
   "/createMenu",
   catchAsyncErrors(async (req, res, next) => {
@@ -343,7 +325,8 @@ router.post(
     res.json("Le menu a été modifié avec succès");
   })
 );
-
+*/
+/*
 router.post(
   "/updateMenu",
   catchAsyncErrors(async (req, res, next) => {
@@ -369,5 +352,6 @@ router.post(
     res.json("Le menu a été modifié avec succès");
   })
 );
+*/
 
 module.exports = router;
