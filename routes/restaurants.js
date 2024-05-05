@@ -4,6 +4,8 @@ const authenticateToken = require("../middlewares/authenticateToken");
 const checkBody = require("../utils/checkBody");
 const Restaurant = require("../models/restaurant");
 const Food = require("../models/food");
+const Option = require("../models/option");
+
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const AppError = require("../utils/AppError");
 
@@ -32,38 +34,111 @@ const generateUniqueValue = async (name, city) => {
   return uniqueValue;
 };
 
-createFoods = async (menu) => {
-  const menuWithFoodIds = await Promise.all(
-    menu.map(async (foodCategory) => {
+createMenu = async (menu, restaurantUniqueValue) => {
+  const populatedMenu = await Promise.all(
+    menu.map(async (foodCategory, i) => {
+      const foods = [];
+      for (const food of foodCategory.foods) {
+        const optionGroups = [];
+        for (const optionGroup of food.optionGroups) {
+          const optionIds = [];
+          for (const option of optionGroup.options) {
+            const optionFound = await Option.findOne({
+              value: option.value,
+              isSupplement: option.isSupplement,
+              price: option.price,
+              restaurantUniqueValue: restaurantUniqueValue,
+            });
+            if (optionFound) {
+              optionIds.push(optionFound._id);
+            } else {
+              const newOption = await Option.create({
+                ...option,
+                restaurantUniqueValue: restaurantUniqueValue,
+              });
+              optionIds.push(newOption._id);
+            }
+          }
+          optionGroup.options = optionIds;
+          optionGroups.push(optionGroup);
+        }
+
+        const newFood = await Food.create({
+          ...food,
+          categoryNumber: i,
+          categoryTitle: foodCategory.title,
+          optionGroups: optionGroups,
+          restaurantUniqueValue: restaurantUniqueValue,
+        });
+        foods.push(newFood._id);
+      }
       return {
         ...foodCategory,
-        foods: await Promise.all(
-          foodCategory.foods.map(async (food) => {
-            //sort options by ascending price
-            //food.options.items?.sort((a, b) => a.price - b.price);
-            const newFood = await Food.create(food);
-            return newFood._id;
-          })
-        ),
+        foods,
       };
     })
   );
-  return menuWithFoodIds;
+  return populatedMenu;
 };
 
-async function removeFoodRestaurant(restaurantId) {
-  const restaurantFound = await Restaurant.findOne({ _id: restaurantId });
+updateMenu = async (menu, restaurantUniqueValue) => {
+  const populatedMenu = await Promise.all(
+    menu.map(async (foodCategory, i) => {
+      const foods = [];
+      for (const food of foodCategory.foods) {
+        const optionGroups = [];
+        for (const optionGroup of food.optionGroups) {
+          const optionIds = [];
+          for (const option of optionGroup.options) {
+            const optionFound = await Option.findOne({
+              _id: option._id,
+            });
+            if (optionFound) {
+              const { _id, ...optionData } = option;
+              // Merge the properties of optionData into optionFound
+              Object.assign(optionFound, optionData);
+              optionFound.save();
+              optionIds.push(optionFound.ids);
+            } else {
+              const newOption = await Option.create({
+                ...option,
+                restaurantUniqueValue: restaurantUniqueValue,
+              });
+              optionIds.push(newOption._id);
+            }
+          }
+          optionGroup.options = optionIds;
+          optionGroups.push(optionGroup);
+        }
 
-  const foodIds = Object.values(restaurantFound.menu)
-    .map((category) => category.foods.map((food) => food._id))
-    .flat();
-
-  // delete the foods linked to Restaurant
-  await Food.deleteMany({ _id: { $in: foodIds } });
-
-  //delete the restaurant
-  await Restaurant.deleteOne({ _id: restaurantFound._id });
-}
+        const foodFound = await Food.findOne({ _id: food._id });
+        if (foodFound) {
+          const { _id, ...foodData } = food;
+          // Merge the properties of optionData into optionFound
+          Object.assign(optionFound, foodData);
+          (foodFound.categoryTitle = foodCategory.title),
+            (foodFound.categoryNumber = i);
+          foodFound.save();
+          foods.push(foodFound.ids);
+        } else {
+          const newFood = await Food.create({
+            ...food,
+            categoryNumber: i,
+            categoryTitle: foodCategory.title,
+            optionGroups: optionGroups,
+            restaurantUniqueValue: restaurantUniqueValue,
+          });
+          foods.push(newFood._id);
+        }
+      }
+      return {
+        ...foodCategory,
+        foods,
+      };
+    })
+  );
+  return populatedMenu;
+};
 
 //routes
 // create a new restaurant Document, this requet is IP limited
@@ -97,7 +172,7 @@ router.post("/addRestaurant", async (req, res, next) => {
     req.body.address.city
   );
 
-  const menuWithFoodIds = await createFoods(req.body.menu);
+  const menuWithFoodIds = await createMenu(req.body.menu);
 
   const newRestaurant = await Restaurant.create({
     name: req.body.name,
@@ -121,21 +196,23 @@ router.get(
     const restaurant = await Restaurant.findOne({
       uniqueValue: req.params.uniqueValue.toLowerCase(),
     })
-      .select("-privateSettings")
-      .populate("menu.foods");
+      .select("-privateSettings -_id")
+      .populate({
+        path: "menu.foods",
+        match: { display: true },
+        populate: {
+          path: "optionGroups",
+          populate: {
+            path: "options",
+          },
+        },
+      });
 
     if (!restaurant) {
       throw new AppError("Restaurant Not Found", 404, "NotFoundError");
     } else {
-      //only keep element with display = true for public data
-      restaurant.menu = restaurant.menu
-        .filter((foodCategory) => foodCategory.display === true) // Filtrer les catégories d'aliments
-        .map((foodCategory) => {
-          return {
-            ...foodCategory,
-            foods: foodCategory.foods.filter((food) => food.display === true), // Filtrer les aliments de chaque catégorie
-          };
-        });
+      //only keep element withtiongroup display = true for public data
+      restaurant.menu = restaurant.menu;
       return res.json(restaurant);
     }
   })
@@ -148,7 +225,7 @@ router.get(
   catchAsyncErrors(async (req, res, next) => {
     const restaurant = await Restaurant.findOne({
       uniqueValue: req.params.uniqueValue.toLowerCase(),
-    }).populate("menu.foods");
+    });
     //
     if (restaurant) {
       //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
@@ -230,21 +307,65 @@ router.post(
 */
 
 router.post(
-  "/updateMenu",
+  "/createMenu",
   catchAsyncErrors(async (req, res, next) => {
     const restaurantFound = await Restaurant.findOne({
-      _id: req.body._id,
+      uniqueValue: req.body.uniqueValue,
     });
-    const foodIds = Object.values(restaurantFound.menu)
-      .map((category) => category.foods.map((food) => food._id))
-      .flat();
-
+    if (!restaurantFound) {
+      throw new AppError("Restaurant Not Foud", 404, "ErrorNotFound");
+    }
     // delete the foods linked to Restaurant
-    await Food.deleteMany({ _id: { $in: foodIds } });
+    await Food.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
+    await Option.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
+    const newMenu = await createMenu(req.body.menu, req.body.uniqueValue);
+    restaurantFound.menu = newMenu;
+    restaurantFound.save();
+    res.json("Le menu a été créé avec succès");
+  })
+);
 
-    const updatedMenu = await createFoods(req.body.menu);
-    restaurantFound.menu = updatedMenu;
-    await restaurantFound.save();
+router.post(
+  "/createMenu",
+  catchAsyncErrors(async (req, res, next) => {
+    const restaurantFound = await Restaurant.findOne({
+      uniqueValue: req.body.uniqueValue,
+    });
+    if (!restaurantFound) {
+      throw new AppError("Restaurant Not Foud", 404, "ErrorNotFound");
+    }
+    // delete the foods linked to Restaurant
+    await Food.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
+    await Option.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
+    const newMenu = await createMenu(req.body.menu, req.body.uniqueValue);
+    restaurantFound.menu = newMenu;
+    restaurantFound.save();
+    res.json("Le menu a été modifié avec succès");
+  })
+);
+
+router.post(
+  "/updateMenu",
+  catchAsyncErrors(async (req, res, next) => {
+    if (!req.body.menu[0].foods[0]._id) {
+      throw new AppError(
+        "The payload needs foodIds to update the menu",
+        404,
+        "ErrorNotFound"
+      );
+    }
+    const restaurantFound = await Restaurant.findOne({
+      uniqueValue: req.body.uniqueValue,
+    });
+    if (!restaurantFound) {
+      throw new AppError("Restaurant Not Foud", 404, "ErrorNotFound");
+    }
+    // delete the foods linked to Restaurant
+    await Food.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
+    await Option.deleteMany({ restaurantUniqueValue: req.body.uniqueValue });
+    const newMenu = await updateMenu(req.body.menu, req.body.uniqueValue);
+    restaurantFound.menu = newMenu;
+    restaurantFound.save();
     res.json("Le menu a été modifié avec succès");
   })
 );

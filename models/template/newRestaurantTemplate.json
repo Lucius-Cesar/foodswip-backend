@@ -14,17 +14,16 @@
   "menu": [
     {
       "title": "Pizza",
-      "display": true,
       "foods": [
         {
           "value": "Pizza Margherita",
           "description": "Sauce tomate, Mozzarella, Basilic",
           "price": 10.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -32,34 +31,56 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
-          ],
-          "tva": 6
+          ]
         },
         {
           "value": "Pizza Pepperoni",
           "description": "Sauce tomate, Mozzarella Pepperoni, Poivrons",
           "price": 11.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -67,23 +88,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -91,10 +136,10 @@
           "description": "Sauce tomate Mozzarella Champignons Poivrons Oignons Olives",
           "price": 11.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -102,23 +147,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -126,10 +195,10 @@
           "description": "Sauce tomate, Mozzarella, Jambon, Ananas",
           "price": 12.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -137,23 +206,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -161,10 +254,10 @@
           "description": "Mozzarella, Gorgonzola, parmesan, Emmental",
           "price": 12.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -172,23 +265,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -196,10 +313,10 @@
           "description": "Sauce tomate, Fruits de mer, Ail, Persil",
           "price": 13.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -207,20 +324,43 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ]
@@ -230,10 +370,10 @@
           "description": "Sauce tomate, Mozzarella, Jambon, Champignons",
           "price": 12.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -241,23 +381,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -265,10 +429,10 @@
           "description": "Sauce barbecue, Poulet grillé, Poivrons, Oignons, Mozzarella",
           "price": 13.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -276,23 +440,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -300,10 +488,10 @@
           "description": "Sauce tomate, Poulet épicé, Poivrons, Oignons, Maïs, Coriandre",
           "price": 13.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -311,23 +499,47 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -335,10 +547,10 @@
           "description": "Sauce tomate, Jambon, Artichauts, Champignons, Olives, Mozzarella",
           "price": 14.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta taille",
-              "items": [
+              "options": [
                 { "value": "Taille S", "price": 0 },
                 { "value": "Taille M", "price": 1.5 },
                 { "value": "Taille XL", "price": 3 }
@@ -346,53 +558,79 @@
             },
             {
               "label": "Choisis ta croute",
-              "items": [
+              "options": [
                 { "value": "Croûte normale", "price": 0 },
                 { "value": "Croûte aux herbes", "price": 1 },
                 { "value": "Croûte au fromage", "price": 1 },
                 { "value": "Croûte sans gluten", "price": 2 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Olives noires", "price": 1.5 },
-                { "value": "Champignons", "price": 2 }
+              "isMultiChoices": true,
+              "options": [
+                {
+                  "value": "Olives noires",
+                  "price": 0.5,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Champignons tranchés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Poivrons rouges grillés",
+                  "price": 0.75,
+                  "isSupplement": true
+                },
+                {
+                  "value": "Jambon italien",
+                  "price": 1.0,
+                  "isSupplement": true
+                },
+                { "value": "Anchois", "price": 1.0, "isSupplement": true },
+                {
+                  "value": "Poulet grillé",
+                  "price": 1.25,
+                  "isSupplement": true
+                }
               ]
             }
           ],
+
           "tva": 6
         }
       ]
     },
     {
       "title": "Pâtes",
-      "display": true,
       "foods": [
         {
           "value": "Spaghetti Bolognese",
           "description": "Sauce bolognaise Boeuf haché, Tomates, Oignons, Ail",
           "price": 9.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
@@ -403,26 +641,30 @@
           "description": "Sauce Alfredo, Poulet grillé, Parmesan; Persil",
           "price": 11.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -430,26 +672,30 @@
           "description": "Sauce tomate épicée, Ail, Persil",
           "price": 10.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -457,26 +703,30 @@
           "description": "Sauce bolognaise, Béchamel, Fromage, Pâtes",
           "price": 12.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -484,26 +734,30 @@
           "description": "Sauce tomate, Épinards, Ricotta, Parmesan",
           "price": 11.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -511,26 +765,30 @@
           "description": "Sauce carbonara, Lardons, Oeuf, Parmesan",
           "price": 10.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -538,26 +796,30 @@
           "description": "Sauce pesto, Gnocchi, Parmesan, Basilic",
           "price": 10.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -565,26 +827,30 @@
           "description": "Fruits de mer, Sauce à l'ail, Persil",
           "price": 13.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -592,26 +858,30 @@
           "description": "Sauce béchamel, Jambon, Champignons, Fromage",
           "price": 11.49,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         },
         {
@@ -619,50 +889,44 @@
           "description": "Légumes grillés, Sauce à l'ail, Parmesan",
           "price": 10.99,
           "display": true,
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ton type de pâtes",
-              "items": [
+              "options": [
                 { "value": "Pâtes blanches", "price": 0 },
                 { "value": "Pâtes complètes", "price": 0 },
                 { "value": "Pâtes sans gluten", "price": 1.5 }
               ]
-            }
-          ],
-          "supplements": [
+            },
             {
               "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
+              "isMultiChoices": true,
+              "options": [
+                { "value": "Parmesan", "price": 1, "isSupplement": true },
+                {
+                  "value": "Tomates ceries",
+                  "price": 1.5,
+                  "isSupplement": true
+                },
+                { "value": "Piments", "price": 1, "isSupplement": true }
               ]
             }
           ],
+
           "tva": 6
         }
       ]
     },
     {
       "title": "Entrées",
-      "display": true,
       "foods": [
         {
           "value": "Bruschetta",
           "description": "Tomates, Ail, Basilic, Pain grillé",
           "price": 6.99,
           "display": true,
-          "options": [],
-          "supplements": [
-            {
-              "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
-              ]
-            }
-          ],
+          "optionGroups": [],
+
           "tva": 6
         },
         {
@@ -670,17 +934,8 @@
           "description": "Calamars, Chapelure, Sauce tartare",
           "price": 8.99,
           "display": true,
-          "options": [],
-          "supplements": [
-            {
-              "label": "Choisis tes suppléments:",
-              "items": [
-                { "value": "Parmesan", "price": 1 },
-                { "value": "Tomates ceries", "price": 1.5 },
-                { "value": "Piments", "price": 1 }
-              ]
-            }
-          ],
+          "optionGroups": [],
+
           "tva": 6
         },
         {
@@ -689,10 +944,10 @@
           "price": 9.99,
           "display": true,
           "supplements": [],
-          "options": [
+          "optionGroups": [
             {
               "label": "Choisis ta portion",
-              "items": [
+              "options": [
                 { "value": "Portion XL", "price": 2 },
                 { "value": "Portion normale", "price": 0 }
               ]
@@ -705,11 +960,11 @@
           "description": "Laitue romaine, Poulet grillé, Parmesan, Croûtons, Sauce César",
           "price": 7.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [
             {
               "label": "Choisis tes suppléments:",
-              "items": [
+              "options": [
                 { "value": "Parmesan", "price": 1 },
                 { "value": "Tomates ceries", "price": 1.5 },
                 { "value": "Piments", "price": 1 }
@@ -724,7 +979,7 @@
           "price": 6.99,
           "display": true,
           "supplements": [],
-          "options": [],
+          "optionGroups": [],
           "tva": 6
         },
         {
@@ -733,7 +988,7 @@
           "price": 6.49,
           "display": true,
           "supplements": [],
-          "options": [],
+          "optionGroups": [],
           "tva": 6
         }
       ]
@@ -747,7 +1002,7 @@
           "description": "Biscuits à la cuillère, Café, Mascarpone, Cacao",
           "price": 7.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -756,7 +1011,7 @@
           "description": "Chocolat noir, Beurre, Oeufs, Sucre, Farine",
           "price": 8.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -765,7 +1020,7 @@
           "description": "Crème, Sucre, Gélatine, Vanille",
           "price": 6.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -774,7 +1029,7 @@
           "description": "Fruits de saison, Sucre, Beurre, Farine, Avoine",
           "price": 7.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -783,7 +1038,7 @@
           "description": "Choux, Glace à la vanille, Chocolat chaud",
           "price": 8.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -792,7 +1047,7 @@
           "description": "Pâte brisée, Fruits frais, Gelée de fruit",
           "price": 9.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -801,7 +1056,7 @@
           "description": "Citron, Crème, Sucre, Gélatine",
           "price": 6.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -810,7 +1065,7 @@
           "description": "Crêpes, Nutella, Banane, Noix",
           "price": 7.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -819,7 +1074,7 @@
           "description": "Fruits de saison, Miel, Menthe",
           "price": 5.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -828,7 +1083,7 @@
           "description": "Fromage frais, Oeufs, Sucre, Vanille",
           "price": 9.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         }
@@ -843,7 +1098,7 @@
           "description": "Eau",
           "price": 2.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -852,7 +1107,7 @@
           "description": "Soda, Cola",
           "price": 3.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -861,7 +1116,7 @@
           "description": "Jus d'orange pressé",
           "price": 4.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -870,7 +1125,7 @@
           "description": "Café",
           "price": 2.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -879,7 +1134,7 @@
           "description": "Thé, Glaçons, Citron",
           "price": 3.49,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -888,7 +1143,7 @@
           "description": "Fruits rouges, Yaourt, Miel",
           "price": 5.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -897,7 +1152,7 @@
           "description": "Menthe, Citron vert, Sucre de canne, Eau gazeuse",
           "price": 4.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -906,7 +1161,7 @@
           "description": "Citron, Eau gazeuse, Sucre",
           "price": 3.79,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -915,7 +1170,7 @@
           "description": "Café, Lait, Mousse de lait",
           "price": 4.29,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 6
         },
@@ -924,7 +1179,7 @@
           "description": "Vin rouge, Cépages assortis",
           "price": 8.99,
           "display": true,
-          "options": [],
+          "optionGroups": [],
           "supplements": [],
           "tva": 21
         }

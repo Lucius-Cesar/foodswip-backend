@@ -1,14 +1,12 @@
 const mongoose = require("mongoose");
 
 const ArticleSchema = new mongoose.Schema({
-  value: String,
   food: { type: mongoose.Schema.Types.ObjectId, ref: "food" },
+  options: [{ type: mongoose.Schema.Types.ObjectId, ref: "option" }],
   quantity: Number,
-  selectedOptions: [String],
-  selectedSupplements: [String],
   price: Number,
   sum: Number,
-  foodCategoryIndex: Number,
+  _id: false,
 });
 
 const OrderSchema = {
@@ -39,7 +37,7 @@ const OrderSchema = {
   status: String,
   statusHistory: [{ status: String, date: Date, _id: false }],
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
-  restaurantUniqueValue: String,
+  restaurantUniqueValue: { type: String, ref: "restaurant" },
 };
 
 const Order = mongoose.model("order", OrderSchema);

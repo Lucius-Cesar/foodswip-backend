@@ -198,19 +198,23 @@ const formatOrderToHtml = (order, restaurant) => {
     `;
 
   order.articles.forEach((article, i) => {
-    const selectedOptionsWithSpaces = article.selectedOptions.map(
-      (option) => `<br>&nbsp;&nbsp;&nbsp;&nbsp;${option}`
+    const options = article.options.filter((option) => !option.isSupplement);
+    const supplements = article.options.filter((option) => option.isSupplement);
+
+    const formattedOptions = options.map(
+      (option) => `<br>&nbsp;&nbsp;&nbsp;&nbsp;${option.value}`
     );
-    const selectedSupplementsWithSpaces = article.selectedSupplements.map(
-      (supplement) => `<br>&nbsp;&nbsp;+&nbsp;${supplement}`
+
+    const formattedSupplements = supplements.map(
+      (supplement) => `<br>&nbsp;&nbsp;+&nbsp;${supplement.value}`
     );
 
     html += `
         <tr>
             <td>${article.quantity}</td>
-            <td><strong>${article.value}</strong>
-              ${selectedOptionsWithSpaces.join("")}
-              ${selectedSupplementsWithSpaces.join("")}
+            <td><strong>${article.food.value}</strong>
+              ${formattedOptions.join("")}
+              ${formattedSupplements.join("")}
             </td>
             <td>${article.sum}</td>
         </tr>`;

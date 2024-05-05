@@ -5,21 +5,19 @@ const FoodSchema = new mongoose.Schema({
   description: String,
   price: Number,
   display: Boolean,
-  options: [
+  categoryNumber: Number,
+  categoryTitle: String,
+  tva: { type: Number, default: 6 },
+  optionGroups: [
+    //options can be items in the option schema (option, supplements etc.) or another food to do this: "Select your dessert" reference other foods in the dessert category
     {
       label: String,
-      items: [{ value: String, price: Number }],
+      isMultiChoices: { type: Boolean, default: false },
+      options: [{ type: mongoose.Schema.Types.ObjectId, ref: "option" }],
       _id: false,
     },
   ],
-  supplements: [
-    {
-      label: String,
-      items: [{ value: String, price: Number }],
-      _id: false,
-    },
-  ],
-  tva: Number,
+  restaurantUniqueValue: { type: String, ref: "restaurant" },
 });
 
 const Food = mongoose.model("food", FoodSchema);

@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const FoodCategorySchema = new mongoose.Schema({
   title: String,
-  display: Boolean,
   foods: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],
 });
 
@@ -84,19 +83,6 @@ const RestaurantSchema = new mongoose.Schema({
   },
   //foodSchema is nested in foodCategoriesSchema
   menu: [FoodCategorySchema],
-});
-
-// Middleware to remove associated foods before removing a restaurant
-RestaurantSchema.pre("remove", function (next) {
-  // Remove all foods associated with this restaurant
-  mongoose
-    .model("food")
-    .deleteMany({ _id: { $in: this.menu.foods } }, (err) => {
-      if (err) {
-        return next(err);
-      }
-      next();
-    });
 });
 
 const Restaurant = mongoose.model("restaurant", RestaurantSchema);
