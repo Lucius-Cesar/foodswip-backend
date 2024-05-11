@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const FoodCategorySchema = new mongoose.Schema({
   title: String,
   foods: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],
-});
+})
 
 const RestaurantSchema = new mongoose.Schema({
   name: String,
@@ -26,13 +26,6 @@ const RestaurantSchema = new mongoose.Schema({
       start: Date,
       end: Date,
     },
-    orderTypes: [
-      {
-        value: Number,
-        enabled: Boolean,
-        _id: false,
-      },
-    ],
     deliveryEstimate: {
       min: Number,
       max: Number,
@@ -56,6 +49,8 @@ const RestaurantSchema = new mongoose.Schema({
           {
             start: String,
             end: String,
+            delivery: Boolean,
+            takeaway: Boolean,
             _id: false,
           },
         ],
@@ -83,7 +78,7 @@ const RestaurantSchema = new mongoose.Schema({
   },
   //foodSchema is nested in foodCategoriesSchema
   menu: [FoodCategorySchema],
-});
+})
 
-const Restaurant = mongoose.model("restaurant", RestaurantSchema);
-module.exports = Restaurant;
+const Restaurant = mongoose.model("restaurant", RestaurantSchema)
+module.exports = Restaurant

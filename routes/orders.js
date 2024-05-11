@@ -14,8 +14,6 @@ const {
 
 const { addMoney, multiplyMoney } = require("../utils/moneyCalculations");
 
-const nodemailer = require("nodemailer");
-
 router.post(
   "/addOrder",
   catchAsyncErrors(async (req, res, next) => {
@@ -33,18 +31,10 @@ router.post(
         "orderType",
         "paymentMethod",
         "estimatedArrivalDate",
-        "restaurantUniqueValue",
+        "restaurant",
       ])
     ) {
       throw new AppError("Body is incorrect", 400, "BadRequestError");
-    }
-
-    // Vérification si le restaurant existe dans la base de données
-    const restaurantFound = await Restaurant.findOne({
-      uniqueValue: req.body.restaurantUniqueValue,
-    });
-    if (!restaurantFound) {
-      throw new AppError("Restaurant not found", 404, "NotFoundError");
     }
 
     // Date actuelle
@@ -80,20 +70,25 @@ router.post(
       estimatedArrivalDate: req.body.estimatedArrivalDate,
       status: "completed",
       statusHistory: [{ status: "completed", date: currentDate }],
-      restaurant: restaurantFound._id,
-      restaurantUniqueValue: restaurantFound.uniqueValue,
+      restaurant: req.body.restaurant,
     });
 
     //populate before the creation of newOrder ! usefull tips
     const populatedNewOrder = await Order.populate(newOrder, {
+      path: "restaurant",
       path: "articles",
       populate: [{ path: "food" }, { path: "options" }],
     });
+
+    const restaurant = populatedNewOrder.restaurant;
+    if (!restaurant) {
+      throw new AppError("Restaurant not found", 404, "ErrorNotFound");
+    }
+    populatedNewOrder.restaurantUniqueValue = restaurant.uniqueValue;
+
     populatedNewOrder.articles.forEach((article, i) => {
       // Vérification de l'association des articles avec le restaurant
-      if (
-        article.food.restaurantUniqueValue !== req.body.restaurantUniqueValue
-      ) {
+      if (article.food.restaurantUniqueValue !== restaurant.uniqueValue) {
         throw new AppError(
           "Food payload is not associated with the concerned restaurant",
           403,
@@ -101,7 +96,7 @@ router.post(
         );
       }
       article.options.forEach((option, j) => {
-        if (option.restaurantUniqueValue !== req.body.restaurantUniqueValue) {
+        if (option.restaurantUniqueValue !== restaurant.uniqueValue) {
           throw new AppError(
             "Option payload is not associated with the concerned restaurant",
             403,
@@ -142,7 +137,7 @@ router.post(
       populatedNewOrder.orderType === 0
         ? addMoney(
             populatedNewOrder.articlesSum,
-            restaurantFound.publicSettings.deliveryFees
+            restaurant.publicSettings.deliveryFees
           )
         : populatedNewOrder.orderType === 1
         ? populatedNewOrder.articlesSum
@@ -160,8 +155,8 @@ router.post(
       const mailToTheCustomer = await transporter.sendMail({
         from: expeditor,
         to: customerMail,
-        subject: `Merci pour votre commande chez ${restaurantFound.name} #${populatedNewOrderCopy.orderNumber}`,
-        html: orderCustomerMailHtml(populatedNewOrderCopy, restaurantFound),
+        subject: `Merci pour votre commande chez ${restaurant.name} #${populatedNewOrderCopy.orderNumber}`,
+        html: orderCustomerMailHtml(populatedNewOrderCopy, restaurant),
       });
 
       if (!mailToTheCustomer) {
@@ -173,14 +168,14 @@ router.post(
       }
 
       // Envoi d'un e-mail de confirmation au restaurant
-      if (restaurantFound.privateSettings.orderMailReception.enabled) {
+      if (restaurant.privateSettings.orderMailReception.enabled) {
         const restaurantMail =
-          restaurantFound.privateSettings.orderMailReception.mail;
+          restaurant.privateSettings.orderMailReception.mail;
         const mailToTheRestaurant = await transporter.sendMail({
           from: expeditor,
           to: restaurantMail,
           subject: `Nouvelle commande #${populatedNewOrderCopy.orderNumber}`,
-          html: orderRestaurantMailHtml(populatedNewOrderCopy, restaurantFound),
+          html: orderRestaurantMailHtml(populatedNewOrderCopy, restaurant),
         });
         if (!mailToTheRestaurant) {
           throw new AppError(
