@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const ArticleSchema = new mongoose.Schema({
   food: { type: mongoose.Schema.Types.ObjectId, ref: "food" },
@@ -7,7 +7,7 @@ const ArticleSchema = new mongoose.Schema({
   price: Number,
   sum: Number,
   _id: false,
-});
+})
 
 const OrderSchema = {
   orderNumber: Number,
@@ -37,8 +37,7 @@ const OrderSchema = {
   status: String,
   statusHistory: [{ status: String, date: Date, _id: false }],
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
-  restaurantUniqueValue: { type: String, ref: "restaurant" },
-};
+}
 
-const Order = mongoose.model("order", OrderSchema);
-module.exports = Order;
+const Order = mongoose.model("order", OrderSchema)
+module.exports = Order

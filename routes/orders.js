@@ -1,18 +1,18 @@
-var express = require("express");
-var router = express.Router();
-const checkBody = require("../utils/checkBody");
-const Order = require("../models/order");
-const Restaurant = require("../models/restaurant");
-const Counter = require("../models/counter");
-const catchAsyncErrors = require("../utils/catchAsyncErrors");
-const AppError = require("../utils/AppError");
+var express = require("express")
+var router = express.Router()
+const checkBody = require("../utils/checkBody")
+const Order = require("../models/order")
+const Restaurant = require("../models/restaurant")
+const Counter = require("../models/counter")
+const catchAsyncErrors = require("../utils/catchAsyncErrors")
+const AppError = require("../utils/AppError")
 const {
   transporter,
   orderCustomerMailHtml,
   orderRestaurantMailHtml,
-} = require("../utils/email");
+} = require("../utils/email")
 
-const { addMoney, multiplyMoney } = require("../utils/moneyCalculations");
+const { addMoney, multiplyMoney } = require("../utils/moneyCalculations")
 
 router.post(
   "/addOrder",
@@ -34,17 +34,17 @@ router.post(
         "restaurant",
       ])
     ) {
-      throw new AppError("Body is incorrect", 400, "BadRequestError");
+      throw new AppError("Body is incorrect", 400, "BadRequestError")
     }
 
     // Date actuelle
-    const currentDate = new Date();
+    const currentDate = new Date()
 
     // Récupération et incrémentation du numéro de commande
     const NewOrderNumber = await Counter.findOneAndUpdate(
       { _id: "orderNumber" },
       { $inc: { count: 1 } }
-    );
+    )
 
     const newOrder = new Order({
       orderNumber: NewOrderNumber.count,
@@ -71,20 +71,23 @@ router.post(
       status: "completed",
       statusHistory: [{ status: "completed", date: currentDate }],
       restaurant: req.body.restaurant,
-    });
+    })
 
     //populate before the creation of newOrder ! usefull tips
     const populatedNewOrder = await Order.populate(newOrder, {
       path: "restaurant",
+    })
+
+    await Order.populate(populatedNewOrder, {
       path: "articles",
       populate: [{ path: "food" }, { path: "options" }],
-    });
+    })
 
-    const restaurant = populatedNewOrder.restaurant;
+    const restaurant = populatedNewOrder.restaurant
     if (!restaurant) {
-      throw new AppError("Restaurant not found", 404, "ErrorNotFound");
+      throw new AppError("Restaurant not found", 404, "ErrorNotFound")
     }
-    populatedNewOrder.restaurantUniqueValue = restaurant.uniqueValue;
+    populatedNewOrder.restaurantUniqueValue = restaurant.uniqueValue
 
     populatedNewOrder.articles.forEach((article, i) => {
       // Vérification de l'association des articles avec le restaurant
@@ -93,7 +96,7 @@ router.post(
           "Food payload is not associated with the concerned restaurant",
           403,
           "ErrorForbidden"
-        );
+        )
       }
       article.options.forEach((option, j) => {
         if (option.restaurantUniqueValue !== restaurant.uniqueValue) {
@@ -101,36 +104,36 @@ router.post(
             "Option payload is not associated with the concerned restaurant",
             403,
             "ErrorForbidden"
-          );
+          )
         }
-      });
+      })
 
       const optionsPrice = article.options.reduce(
         (accumulator, option) => addMoney(accumulator, option.price),
         0
-      );
+      )
       // Calcul du prix de l'article
       populatedNewOrder.articles[i].price = addMoney(
         article.food.price,
         optionsPrice
-      );
+      )
       // Calcul de la somme de l'article
       populatedNewOrder.articles[i].sum = multiplyMoney(
         article.price,
         article.quantity
-      );
-    });
+      )
+    })
 
     // Tri des articles par index de catégorie alimentaire
     populatedNewOrder.articles.sort(
       (a, b) => a.food.categoryNumber - b.food.categoryNumber
-    );
+    )
 
     // Calcul de la somme des articles
     populatedNewOrder.articlesSum = populatedNewOrder.articles.reduce(
       (accumulator, article) => addMoney(accumulator, article.sum),
       0
-    );
+    )
 
     // Calcul du total de la commande en fonction du type de commande
     populatedNewOrder.totalSum =
@@ -141,77 +144,77 @@ router.post(
           )
         : populatedNewOrder.orderType === 1
         ? populatedNewOrder.articlesSum
-        : null; // Vous devez définir ce que vous souhaitez faire si orderType n'est ni 0 ni 1
+        : null // Vous devez définir ce que vous souhaitez faire si orderType n'est ni 0 ni 1
 
     // Enregistrement de la commande
 
     //Envoi d'un e-mail de confirmation au client
-    const populatedNewOrderCopy = populatedNewOrder;
-    populatedNewOrder.save();
+    const populatedNewOrderCopy = populatedNewOrder
+    populatedNewOrder.save()
 
     if (populatedNewOrder) {
-      const expeditor = `"Foodswip" <noreply@foodswip-order.com>`;
-      const customerMail = populatedNewOrderCopy.customer.mail;
+      const expeditor = `"Foodswip" <noreply@foodswip-order.com>`
+      const customerMail = populatedNewOrderCopy.customer.mail
       const mailToTheCustomer = await transporter.sendMail({
         from: expeditor,
         to: customerMail,
         subject: `Merci pour votre commande chez ${restaurant.name} #${populatedNewOrderCopy.orderNumber}`,
         html: orderCustomerMailHtml(populatedNewOrderCopy, restaurant),
-      });
+      })
 
       if (!mailToTheCustomer) {
         throw new AppError(
           "Error sending mail to the customer",
           500,
           "ErrorMailCustomer"
-        );
+        )
       }
 
       // Envoi d'un e-mail de confirmation au restaurant
       if (restaurant.privateSettings.orderMailReception.enabled) {
         const restaurantMail =
-          restaurant.privateSettings.orderMailReception.mail;
+          restaurant.privateSettings.orderMailReception.mail
         const mailToTheRestaurant = await transporter.sendMail({
           from: expeditor,
           to: restaurantMail,
           subject: `Nouvelle commande #${populatedNewOrderCopy.orderNumber}`,
           html: orderRestaurantMailHtml(populatedNewOrderCopy, restaurant),
-        });
+        })
         if (!mailToTheRestaurant) {
           throw new AppError(
             "Error sending mail to the restaurant",
             500,
             "ErrorMailRestaurant"
-          );
+          )
         }
       }
-      res.json(populatedNewOrder);
+      res.json(populatedNewOrder)
     }
   })
-);
+)
 
 router.get(
   "/:orderNumber",
   catchAsyncErrors(async function (req, res, next) {
     const orderFound = await Order.findOne({
       orderNumber: req.params.orderNumber,
-    });
+    })
     if (orderFound) {
-      const allowedIPs = [orderFound.customer.ip];
-      const clientIP = req.ip;
+      const allowedIPs = [orderFound.customer.ip]
+      const clientIP = req.ip
       if (!allowedIPs.includes(clientIP)) {
         throw new AppError(
           "This IP address is not allowed for this order",
           403,
           "FordbiddenError"
-        );
+        )
       } else {
-        res.json(orderFound);
+        res.json(orderFound)
       }
     } else {
-      throw new AppError("Order Not Found", 404, "NotFoundError");
+      throw new AppError("Order Not Found", 404, "NotFoundError")
     }
   })
-);
+)
 
-module.exports = router;
+module.exports = router
