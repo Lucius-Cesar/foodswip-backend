@@ -6,7 +6,7 @@ const catchAsyncErrors = require("../utils/catchAsyncErrors")
 
 exports.getPublicRestaurantData = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
-    uniqueValue: req.params.uniqueValue.toLowerCase(),
+    slug: req.params.slug.toLowerCase(),
   })
     .select("-privateSettings")
     .populate({
@@ -31,12 +31,12 @@ exports.getPublicRestaurantData = catchAsyncErrors(async (req, res, next) => {
 
 exports.getAdminRestaurantData = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
-    uniqueValue: req.params.uniqueValue.toLowerCase(),
+    slug: req.params.slug.toLowerCase(),
   })
   //
   if (restaurant) {
-    //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
-    if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
+    //check if slug inside the jwt token is the same as restaurant.slug
+    if (req.user.slug !== restaurant.slug) {
       throw new AppError(
         "data access is Forbidden for this user",
         403,
@@ -51,11 +51,11 @@ exports.getAdminRestaurantData = catchAsyncErrors(async (req, res, next) => {
 
 exports.updateRestaurantSettings = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
-    uniqueValue: req.body.uniqueValue,
+    slug: req.body.slug,
   })
   if (restaurant) {
-    //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
-    if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
+    //check if slug inside the jwt token is the same as restaurant.slug
+    if (req.user.slug !== restaurant.slug) {
       throw new AppError(
         "Update restaurant settings is Forbidden for this user",
         403,
@@ -103,17 +103,10 @@ exports.createRestaurant = catchAsyncErrors(async (req, res, next) => {
   ) {
     throw new AppError("Body is incorrect", 400, "BadRequestError")
   }
-  if (!allowedIPs.includes(clientIP)) {
-    throw new AppError(
-      "This IP address is not allowed for this route",
-      400,
-      "ForbiddenError"
-    )
-  }
 
   const newRestaurant = await Restaurant.create({
     name: req.body.name,
-    uniqueValue: req.body.uniqueValue,
+    slug: req.body.slug,
     mail: req.body.mail,
     website: req.body.website,
     phoneNumber: req.body.phoneNumber,
@@ -123,7 +116,7 @@ exports.createRestaurant = catchAsyncErrors(async (req, res, next) => {
     menu: [],
   })
 
-  newRestaurant.menu = await createMenu(req.body.menu, newRestaurant)
+  await createMenu(req.body.menu, newRestaurant)
 
   return res.json(newRestaurant)
 })

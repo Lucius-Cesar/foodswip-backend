@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const FoodSchema = new mongoose.Schema({
   value: String,
@@ -17,8 +17,8 @@ const FoodSchema = new mongoose.Schema({
       _id: false,
     },
   ],
-  restaurantUniqueValue: { type: String, ref: "restaurant" },
-});
+  slug: { type: String, ref: "restaurant" },
+})
 
-const Food = mongoose.model("food", FoodSchema);
-module.exports = Food;
+const Food = mongoose.model("food", FoodSchema)
+module.exports = Food

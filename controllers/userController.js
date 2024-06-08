@@ -30,7 +30,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 
         const userInfo = {
           username: user.mail,
-          restaurantUniqueValue: user.restaurantUniqueValue,
+          slug: user.slug,
         }
 
         const accessToken = exports.generateAccessToken(userInfo)
@@ -54,7 +54,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
           token: accessToken,
           user: {
             username: user.mail,
-            restaurantUniqueValue: user.restaurantUniqueValue,
+            slug: user.slug,
           },
         })
       })
@@ -84,13 +84,13 @@ exports.refreshToken = catchAsyncErrors(async (req, res) => {
           throw new AppError("Unauthorized token", 403, "ErrorUnauthorized")
         const accessToken = exports.generateAccessToken({
           username: user.username,
-          restaurantUniqueValue: user.restaurantUniqueValue,
+          slug: user.slug,
         })
         res.json({
           token: accessToken,
           user: {
             username: user.username,
-            restaurantUniqueValue: user.restaurantUniqueValue,
+            slug: user.slug,
           },
         })
       })

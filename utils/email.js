@@ -1,189 +1,25 @@
-const nodemailer = require("nodemailer");
-const mg = require("nodemailer-mailgun-transport");
+const nodemailer = require("nodemailer")
+const mg = require("nodemailer-mailgun-transport")
 
-/* 
-const order = {
-  _id: {
-    $oid: "6606b55ee97379ed62b4a628",
-  },
-  orderNumber: 233281,
-  customer: {
-    firstname: "Lucius",
-    lastname: "grangius",
-    mail: "luciendelgrange5@gmail.com",
-    phoneNumber: "04980839362",
-    address: {
-      streetAddress: "8, rue du bout de la haut",
-      postCode: "7390",
-      city: "Quaregnon",
-    },
-    ip: "::1",
-  },
-  articles: [
-    {
-      value: "Pizza Margherita",
-      food: {
-        $oid: "66006465fe8ee40efe1afdab",
-      },
-      quantity: 5,
-      selectedOptions: ["Taille S", "Croûte normale"],
-      selectedSupplements: ["Olives noires", "Champignons"],
-      price: 14.49,
-      sum: 72.45,
-      foodCategoryIndex: 0,
-      _id: {
-        $oid: "6606b55ee97379ed62b4a629",
-      },
-    },
-  ],
-  articlesSum: 72.45,
-  totalSum: 77.45,
-  note: "",
-  orderType: 0,
-  paymentMethod: "cash",
-  creationDate: {
-    $date: "2024-03-29T12:34:38.175Z",
-  },
-  lastUpdate: {
-    $date: "2024-03-29T12:34:38.175Z",
-  },
-  estimatedArrivalDate: {
-    $date: "2024-03-29T13:34:37.995Z",
-  },
-  status: "completed",
-  statusHistory: [
-    {
-      status: "completed",
-      date: {
-        $date: "2024-03-29T12:34:38.175Z",
-      },
-    },
-  ],
-  __v: 0,
-};
-
-/*
-
-/*
-const restaurant = {
-  name: "Dodopizza",
-  uniqueValue: "dodopizza",
-  mail: "restaurant@dodopizza.com",
-  phoneNumber: "+32407886655",
-  website: "www.dodopizza.com",
-  publicSettings: {
-    orderTypes: [
-      {
-        value: 0,
-        enabled: true,
-      },
-      {
-        value: 1,
-        enabled: true,
-      },
-    ],
-    deliveryEstimate: {
-      min: 45,
-      max: 60,
-    },
-    deliveryFees: 5,
-    deliveryMin: 20,
-    takeAwayEstimate: 15,
-    paymentMethods: [
-      {
-        value: "cash",
-        delivery: true,
-        takeAway: true,
-      },
-      {
-        value: "bancontact",
-        delivery: true,
-        takeAway: true,
-      },
-    ],
-    schedule: [
-      {
-        value: "monday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-      {
-        value: "tuesday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-      {
-        value: "wednesday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-      {
-        value: "thursday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-      {
-        value: "friday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-      {
-        value: "saturday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-      {
-        value: "sunday",
-        services: [
-          {
-            start: "00:00",
-            end: "23:59",
-          },
-        ],
-      },
-    ],
-    exceptionalClosings: [],
-  },
-  privateSettings: {
-    orderMailReception: {
-      enabled: false,
-      mails: ["test@gmail.com"],
-    },
-    pendingOrderAlert: {
-      enabled: true,
-      interval: 5,
-    },
-  },
-};
-*/
-const formatOrderToHtml = (order, restaurant) => {
+const formatOrderToHtml = (order) => {
   const formattedEstimatedArrivalDate = `${order.estimatedArrivalDate.getHours()}:${String(
     order.estimatedArrivalDate.getMinutes()
-  ).padStart(2, "0")}`;
+  ).padStart(2, "0")}`
+
+  const switchPaymentMethod = (paymentMethod) => {
+    switch (paymentMethod) {
+      case "cash":
+        return "Cash"
+        break
+      case "bancontact":
+        return "Bancontact"
+        break
+      case "online":
+        return "Paiement en ligne"
+      default:
+      // code to be executed if paymentMethod is different from 'method1' and 'method2'
+    }
+  }
 
   let html = `
   <div class = "orderData">
@@ -195,19 +31,19 @@ const formatOrderToHtml = (order, restaurant) => {
             <th>Article</th>
             <th>Prix</th>
         </tr>
-    `;
+    `
 
   order.articles.forEach((article, i) => {
-    const options = article.options.filter((option) => !option.isSupplement);
-    const supplements = article.options.filter((option) => option.isSupplement);
+    const options = article.options.filter((option) => !option.isSupplement)
+    const supplements = article.options.filter((option) => option.isSupplement)
 
     const formattedOptions = options.map(
       (option) => `<br>&nbsp;&nbsp;&nbsp;&nbsp;${option.value}`
-    );
+    )
 
     const formattedSupplements = supplements.map(
       (supplement) => `<br>&nbsp;&nbsp;+&nbsp;${supplement.value}`
-    );
+    )
 
     html += `
         <tr>
@@ -217,8 +53,8 @@ const formatOrderToHtml = (order, restaurant) => {
               ${formattedSupplements.join("")}
             </td>
             <td>${article.sum}</td>
-        </tr>`;
-  });
+        </tr>`
+  })
 
   html += `
   ${
@@ -227,7 +63,7 @@ const formatOrderToHtml = (order, restaurant) => {
   <tr>
   <td colspan="2"><strong>Frais de livraison</strong></td>
  
-    <td>${restaurant.publicSettings.deliveryFees}</td>
+    <td>${order.deliveryFees}</td>
   
 </tr>
   `
@@ -252,15 +88,15 @@ const formatOrderToHtml = (order, restaurant) => {
         ? "À emporter"
         : ""
     }</p>
-    <p>Moyen de paiement:   <span id = 'bolder'>${
+    <p>Moyen de paiement:   <span id = 'bolder'>${switchPaymentMethod(
       order.paymentMethod
-    } </span> </p>`;
+    )} </span> </p>`
   html += `
       </table>
     </div>
-    `;
-  return html;
-};
+    `
+  return html
+}
 
 const formatCustomerDataToHtml = (order) => {
   return `
@@ -292,14 +128,14 @@ const formatCustomerDataToHtml = (order) => {
         </tr>
     </table> 
   </div>
-  `;
-};
+  `
+}
 
 const orderCustomerMailHtml = (order, restaurant) => {
-  const estimatedArrivalDate = new Date(order.estimatedArrivalDate);
+  const estimatedArrivalDate = new Date(order.estimatedArrivalDate)
   const formattedEstimatedArrivalDate = `${estimatedArrivalDate.getHours()}:${String(
     estimatedArrivalDate.getMinutes()
-  ).padStart(2, "0")}`;
+  ).padStart(2, "0")}`
   return `
 <!DOCTYPE html>
 <html lang="fr">
@@ -396,18 +232,19 @@ ${
     </div>
 </body>
 </html>
-`;
-};
+`
+}
 
 const orderRestaurantMailHtml = (order, restaurant) => {
-  const estimatedArrivalDate = new Date(order.estimatedArrivalDate);
-  const orderCreationDate = new Date(order.creationDate);
+  const estimatedArrivalDate = new Date(order.estimatedArrivalDate)
+  const orderCreationDate = new Date(order.creationDate)
   const formattedOrderCreationDate = `${orderCreationDate.getHours()}:${String(
     orderCreationDate.getMinutes()
-  ).padStart(2, "0")}`;
+  ).padStart(2, "0")}`
   const formattedEstimatedArrivalDate = `${estimatedArrivalDate.getHours()}:${String(
     estimatedArrivalDate.getMinutes()
-  ).padStart(2, "0")}`;
+  ).padStart(2, "0")}`
+
   return `
   <!DOCTYPE html>
   <html lang="fr">
@@ -493,8 +330,8 @@ const orderRestaurantMailHtml = (order, restaurant) => {
   </div>
   </body>
   </html>
-`;
-};
+`
+}
 
 const options = {
   auth: {
@@ -502,12 +339,12 @@ const options = {
     domain: "foodswip-order.com",
   },
   host: "api.eu.mailgun.net",
-};
+}
 
-const transporter = nodemailer.createTransport(mg(options));
+const transporter = nodemailer.createTransport(mg(options))
 
 module.exports = {
   transporter,
   orderRestaurantMailHtml,
   orderCustomerMailHtml,
-};
+}

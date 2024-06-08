@@ -1,6 +1,6 @@
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/user");
+const passport = require("passport")
+const LocalStrategy = require("passport-local").Strategy
+const User = require("./models/user")
 
 passport.use(
   "signup",
@@ -15,15 +15,15 @@ passport.use(
         const user = await User.create({
           mail,
           password,
-          restaurantUniqueValue: req.body.restaurantUniqueValue,
-        });
-        return done(null, user);
+          slug: req.body.slug,
+        })
+        return done(null, user)
       } catch (error) {
-        return done(error);
+        return done(error)
       }
     }
   )
-);
+)
 
 passport.use(
   "login",
@@ -36,20 +36,20 @@ passport.use(
       try {
         const user = await User.findOne({
           mail: { $regex: new RegExp(mail, "i") },
-        });
+        })
         if (!user) {
-          return done(null, false, { message: "User not found" });
+          return done(null, false, { message: "User not found" })
         }
 
-        const validate = await user.isValidPassword(password);
+        const validate = await user.isValidPassword(password)
         if (!validate) {
-          return done(null, false, { message: "Wrong Password" });
+          return done(null, false, { message: "Wrong Password" })
         }
 
-        return done(null, user, { message: "Logged in Successfully" });
+        return done(null, user, { message: "Logged in Successfully" })
       } catch (error) {
-        return done(error);
+        return done(error)
       }
     }
   )
-);
+)

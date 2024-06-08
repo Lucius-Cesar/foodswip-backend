@@ -14,6 +14,7 @@ const errorHandler = require("./middlewares/errorHandler")
 const indexRouter = require("./routes/index")
 const usersRouter = require("./routes/users")
 const menusRouter = require("./routes/menus")
+
 const restaurantsRouter = require("./routes/restaurants")
 const ordersRouter = require("./routes/orders")
 const { prototype } = require("module")

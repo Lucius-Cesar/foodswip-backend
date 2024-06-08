@@ -1,6 +1,6 @@
 {
   "name": "Dodopizza",
-  "uniqueValue": "dodopizza",
+  "slug": "dodopizza",
   "mail": "restaurant@dodopizza.com",
   "website": "www.dodopizza.com",
   "address": {

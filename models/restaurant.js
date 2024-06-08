@@ -7,7 +7,7 @@ const FoodCategorySchema = new mongoose.Schema({
 
 const RestaurantSchema = new mongoose.Schema({
   name: String,
-  uniqueValue: String,
+  slug: String,
   mail: String,
   address: {
     street: String,
@@ -75,6 +75,8 @@ const RestaurantSchema = new mongoose.Schema({
       enabled: Boolean,
       interval: Number,
     },
+    commission: Boolean,
+    stripeConnectId: String,
   },
   //foodSchema is nested in foodCategoriesSchema
   menu: [FoodCategorySchema],

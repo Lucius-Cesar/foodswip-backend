@@ -5,7 +5,7 @@ const catchAsyncErrors = require("../utils/catchAsyncErrors")
 
 exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
   const newMenu = []
-  const restaurantUniqueValue = restaurant.uniqueValue
+  const slug = restaurant.slug
 
   for (let i = 0; i < menu.length; i++) {
     const foodCategory = menu[i]
@@ -26,16 +26,15 @@ exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
             value: option.value,
             isSupplement: option.isSupplement,
             price: option.price,
-            restaurantUniqueValue: restaurantUniqueValue,
+            slug: slug,
           })
           let optionId
           if (optionFound) {
-            console.log("yes found !")
             optionId = optionFound._id
           } else {
             const newOption = await Option.create({
               ...option,
-              restaurantUniqueValue: restaurantUniqueValue,
+              slug: slug,
             })
             optionId = newOption._id
           }
@@ -50,7 +49,7 @@ exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
         categoryNumber: i,
         categoryTitle: foodCategory.title,
         optionGroups: optionGroups,
-        restaurantUniqueValue: restaurantUniqueValue,
+        slug: slug,
       })
       foods.push(newFood._id)
     }
@@ -60,25 +59,25 @@ exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
     })
   }
   restaurant.menu = newMenu
-  restaurant.save()
-  res.json("Le menu a été modifié avec succès")
+  await restaurant.save()
+  return newMenu
 })
 
 exports.replaceMenu = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
-    uniqueValue: req.body.uniqueValue,
+    slug: req.body.slug,
   })
   if (restaurant) {
-    //check if restaurantUniqueValue inside the jwt token is the same as restaurant.uniqueValue
-    if (req.user.restaurantUniqueValue !== restaurant.uniqueValue) {
+    //check if slug inside the jwt token is the same as restaurant.slug
+    if (req.user.slug !== restaurant.slug) {
       throw new AppError(
         "Update restaurant settings is Forbidden for this user",
         403,
         "ForbiddenError"
       )
     }
-    await Food.deleteMany({ restaurantUniqueValue: restaurant.uniqueValue })
-    await Option.deleteMany({ restaurantUniqueValue: restaurant.uniqueValue })
+    await Food.deleteMany({ slug: restaurant.slug })
+    await Option.deleteMany({ slug: restaurant.slug })
     restaurant.menu = []
     restaurant.save()
     await createMenu(req.body.menu, restaurant)
