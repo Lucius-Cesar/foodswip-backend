@@ -237,6 +237,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     res.json({
       clientSecret: newPayment.paymentIntent.client_secret,
       orderId: newTmpOrder._id,
+      orderNumber: newTmpOrder.orderNumber,
       totalSum: newTmpOrder.totalSum,
     })
   }
@@ -263,29 +264,40 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
       res.json(orderFound)
     }
   } else {
-    throw new AppError("Order Not Found", 404, "NotFoundError")
+    //if the order is not found, we check in the tmpOrder collection (for online payment, the order is created in the order collection only after stripe wehbook actions)
+    const tmpOrderFound = await TmpOrder.findOne({
+      orderNumber: req.params.orderNumber,
+    })
+    if (tmpOrderFound) {
+      res.json(tmpOrderFound)
+    } else {
+      throw new AppError("Order Not Found", 404, "NotFoundError")
+    }
   }
 })
 
-exports.processOrderAfterPayment = catchAsyncErrors(async (req, res, next) => {
+exports.processOrderAfterPayment = async (paymentIntent) => {
   // Update the order status to paid
 
-  const tmpOrder = await TmpOrder.findOne({ _id: req.body.orderId }).lean()
-  const restaurantInfo = tmpOrder.restaurantInfo
-  // generate new _v and _id for the real order document
-  const { __v, _id, ...tmpOrderWithoutVersionAndId } = tmpOrder
+  const tmpOrder = await TmpOrder.findById(paymentIntent.metadata.tmpOrderId)
 
-  if (!tmpOrderWithoutVersionAndId) {
+  if (!tmpOrder) {
     throw new AppError("Order not found", 404, "OrderNotFound")
   }
 
-  //create the document in the real order collection
-  const newOrder = new Order(tmpOrderWithoutVersionAndId)
-  const updatedOrder = await exports.updateOrderStatus(newOrder, "completed") //)
+  // Create a plain object from the tmpOrder document
+  const tmpOrderObject = tmpOrder.toObject()
+  delete tmpOrderObject._id
+  delete tmpOrderObject.__v
 
-  await updatedOrder.save()
+  const restaurantInfo = tmpOrderObject.restaurantInfo
+
+  // Create the document in the real order collection
+  const newOrder = new Order(tmpOrderObject)
+  const updatedOrder = await exports.updateOrderStatus(newOrder, "completed")
+
   // Send the order confirmation email, we use tmp order because contain restaurantInfo
   await exports.sendOrderMail(updatedOrder, restaurantInfo)
 
-  res.json(newOrder)
-})
+  return newOrder
+}

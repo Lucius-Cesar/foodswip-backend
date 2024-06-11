@@ -29,6 +29,7 @@ exports.createPaymentIntent = async (order, restaurant) => {
     metadata: {
       platform: "foodswip",
       slug: restaurant.slug,
+      tmpOrderId: order._id.toString(),
       orderNumber: order.orderNumber,
     },
     application_fee_amount: totalFeesInCents,

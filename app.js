@@ -14,11 +14,9 @@ const errorHandler = require("./middlewares/errorHandler")
 const indexRouter = require("./routes/index")
 const usersRouter = require("./routes/users")
 const menusRouter = require("./routes/menus")
-
 const restaurantsRouter = require("./routes/restaurants")
 const ordersRouter = require("./routes/orders")
-const { prototype } = require("module")
-const { applyDefaults } = require("./models/restaurant")
+const stripeRouter = require("./routes/stripe")
 
 const app = express()
 app.set("trust proxy", "loopback")
@@ -54,8 +52,8 @@ app.use("/", indexRouter)
 app.use("/users", usersRouter)
 app.use("/restaurants", restaurantsRouter)
 app.use("/menus", menusRouter)
-
 app.use("/orders", ordersRouter)
+app.use("/stripe", stripeRouter)
 
 //error handler
 app.use(errorHandler)
