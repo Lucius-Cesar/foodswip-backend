@@ -5,6 +5,8 @@ const UserSchema = new mongoose.Schema({
   mail: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   slug: { type: String, required: true },
+  restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
+
 })
 
 UserSchema.pre("save", async function (next) {

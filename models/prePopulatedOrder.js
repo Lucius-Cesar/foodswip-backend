@@ -12,7 +12,7 @@ const ArticleSchema = new mongoose.Schema({
 })
 
 const PrePopulatedOrderSchema = new mongoose.Schema({
-  orderNumber: Number,
+  orderNumber: {type:Number, required:true, unique:true},
   customer: {
     firstname: String,
     lastname: String,
@@ -27,6 +27,12 @@ const PrePopulatedOrderSchema = new mongoose.Schema({
     ip: String,
   },
   articles: [ArticleSchema],
+  formattedArticlesList: [{
+    _id: false,
+    categoryTitle: String,
+    categoryNumber: Number,
+    articles: [ArticleSchema]
+  }],
   articlesSum: Number,
   deliveryFees: Number,
   totalSum: Number,
@@ -39,6 +45,17 @@ const PrePopulatedOrderSchema = new mongoose.Schema({
   status: String,
   statusHistory: [{ status: String, date: Date, _id: false }],
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
+  restaurantInfo: {
+    _id: false,
+    name: String,
+    phoneNumber: String,
+    address: {
+      street: String,
+      streetNumber: String,
+      postCode: String,
+      city: String,
+    }
+  },
   slug: String,
 })
 

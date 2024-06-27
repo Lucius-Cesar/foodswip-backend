@@ -31,6 +31,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
         const userInfo = {
           username: user.mail,
           slug: user.slug,
+          restaurant: user.restaurant
         }
 
         const accessToken = exports.generateAccessToken(userInfo)
@@ -55,6 +56,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
           user: {
             username: user.mail,
             slug: user.slug,
+            restaurant: user.restaurant
           },
         })
       })
@@ -85,12 +87,14 @@ exports.refreshToken = catchAsyncErrors(async (req, res) => {
         const accessToken = exports.generateAccessToken({
           username: user.username,
           slug: user.slug,
+          restaurant: user.restaurant
         })
         res.json({
           token: accessToken,
           user: {
             username: user.username,
             slug: user.slug,
+            restaurant: user.restaurant
           },
         })
       })

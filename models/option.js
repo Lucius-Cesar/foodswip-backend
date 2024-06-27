@@ -8,6 +8,7 @@ const OptionSchema = new mongoose.Schema({
   isNeededInOrder: { type: Boolean, default: true },
   food: [{ type: mongoose.Schema.Types.ObjectId, ref: "food" }],
   slug: { type: String, ref: "restaurant" },
+  restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
 })
 
 const Option = mongoose.model("option", OptionSchema)

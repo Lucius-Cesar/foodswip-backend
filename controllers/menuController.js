@@ -27,6 +27,7 @@ exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
             isSupplement: option.isSupplement,
             price: option.price,
             slug: slug,
+            restaurant: restaurant._id
           })
           let optionId
           if (optionFound) {
@@ -35,6 +36,7 @@ exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
             const newOption = await Option.create({
               ...option,
               slug: slug,
+              restaurant: restaurant._id
             })
             optionId = newOption._id
           }
@@ -50,6 +52,7 @@ exports.createMenu = catchAsyncErrors(async (menu, restaurant) => {
         categoryTitle: foodCategory.title,
         optionGroups: optionGroups,
         slug: slug,
+        restaurant: restaurant._id
       })
       foods.push(newFood._id)
     }
@@ -76,8 +79,8 @@ exports.replaceMenu = catchAsyncErrors(async (req, res, next) => {
         "ForbiddenError"
       )
     }
-    await Food.deleteMany({ slug: restaurant.slug })
-    await Option.deleteMany({ slug: restaurant.slug })
+    await Food.deleteMany({ restaurant: restaurant._id })
+    await Option.deleteMany({restaurant: restaurant._id })
     restaurant.menu = []
     restaurant.save()
     await createMenu(req.body.menu, restaurant)

@@ -18,6 +18,7 @@ const FoodSchema = new mongoose.Schema({
     },
   ],
   slug: { type: String, ref: "restaurant" },
+  restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
 })
 
 const Food = mongoose.model("food", FoodSchema)

@@ -1,11 +1,13 @@
 const checkBody = require("../utils/checkBody")
+const Restaurant = require("../models/restaurant")
 const Order = require("../models/order")
 const PrePopulatedOrder = require("../models/prePopulatedOrder")
 const TmpOrder = require("../models/tmpOrder")
-
 const Counter = require("../models/counter")
 const catchAsyncErrors = require("../utils/catchAsyncErrors")
 const AppError = require("../utils/AppError")
+
+//helpers
 const {
   transporter,
   orderCustomerMailHtml,
@@ -14,6 +16,30 @@ const {
 
 const { addMoney, multiplyMoney } = require("../utils/moneyCalculations")
 const stripeController = require("./stripeController")
+
+//this function format order.articles to allow easily display foodCategories in the order ticket
+const buildFormattedArticleList = (articles) => {
+  const groupedArticles = articles.reduce((acc, article) => {
+    const categoryTitle = article.food.categoryTitle;
+    if (!acc[categoryTitle]) {
+      acc[categoryTitle] = {
+        categoryTitle: categoryTitle,
+        categoryNumber: article.food.categoryNumber,
+        articles: []
+      };
+    }
+    acc[categoryTitle].articles.push(article);
+    return acc;
+  }, {});
+
+  // Convertir les groupes en une liste et trier par categoryNumber
+  const sortedGroupedArticles = Object.values(groupedArticles).sort((a, b) => a.categoryNumber - b.categoryNumber);
+
+  return sortedGroupedArticles;
+};
+
+
+//controller
 
 exports.sendOrderMail = async (order, restaurant) => {
   const expeditor = `${restaurant.name} <noreply@foodswip-order.com>`
@@ -84,7 +110,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
       "orderType",
       "paymentMethod",
       "estimatedArrivalDate",
-      "restaurant",
+      "slug",
     ])
   ) {
     throw new AppError("Body is incorrect", 400, "BadRequestError")
@@ -129,27 +155,23 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     estimatedArrivalDate: req.body.estimatedArrivalDate,
     status: newOrderStatus,
     statusHistory: [{ status: newOrderStatus, date: currentDate }],
-    restaurant: req.body.restaurant,
+    slug : req.body.slug
   })
 
-  //populate before the creation of newOrder !
   let tmpOrder = await PrePopulatedOrder.populate(prePopulatedOrder, {
-    path: "restaurant",
-    select: "-menu",
-  })
-
-  tmpOrder = await PrePopulatedOrder.populate(prePopulatedOrder, {
     path: "articles",
     populate: [{ path: "food" }, { path: "options" }],
   })
 
-  const restaurant = prePopulatedOrder.restaurant
-  if (!restaurant) {
+  //important to convert the document to an object to avoid keeping the prepopulatedOrderSchema
+  tmpOrder = tmpOrder.toObject()
+
+  const restaurant = await Restaurant.findOne({"slug": req.body.slug})
+  if(!restaurant){
     throw new AppError("Restaurant not found", 404, "ErrorNotFound")
   }
-  tmpOrder.slug = restaurant.slug
   tmpOrder.restaurant = restaurant._id
-  const restaurantInfo = {
+  tmpOrder.restaurantInfo = {
     name: restaurant.name,
     phoneNumber: restaurant.phoneNumber,
     address: restaurant.address,
@@ -161,7 +183,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
 
   tmpOrder.articles.forEach((article, i) => {
     // Vérification de l'association des articles avec le restaurant
-    if (article.food.slug !== restaurant.slug) {
+    if (!article.food.restaurant === restaurant._id) {
       throw new AppError(
         "Food payload is not associated with the concerned restaurant",
         403,
@@ -169,7 +191,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
       )
     }
     article.options.forEach((option, j) => {
-      if (option.slug !== restaurant.slug) {
+      if (!option.restaurant === restaurant._id) {
         throw new AppError(
           "Option payload is not associated with the concerned restaurant",
           403,
@@ -192,12 +214,13 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
   tmpOrder.articles.sort(
     (a, b) => a.food.categoryNumber - b.food.categoryNumber
   )
-
   // calculate sum of all articles
   tmpOrder.articlesSum = tmpOrder.articles.reduce(
     (accumulator, article) => addMoney(accumulator, article.sum),
     0
   )
+
+  tmpOrder.formattedArticlesList = buildFormattedArticleList(tmpOrder.articles)
 
   if (tmpOrder.orderType === 0) {
     const deliveryFees = restaurant.publicSettings.deliveryFees
@@ -208,10 +231,12 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     tmpOrder.totalSum = tmpOrder.articlesSum
   }
 
+  //formattedArticleList to easily display the order 
   //if the order is paid by cash, we send the mail directly
   if (["cash", "bancontact"].includes(tmpOrder.paymentMethod)) {
-    const newOrder = await Order.create(tmpOrder)
-    await exports.sendOrderMail(newOrder, restaurantInfo)
+    const newOrder = new Order(tmpOrder)
+    await newOrder.save()
+    await exports.sendOrderMail(newOrder, tmpOrder.restaurantInfo)
     res.json(newOrder)
   }
   //if the order is paid online, create a payment intent, send the client secret and the order id
@@ -222,9 +247,9 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     )
 
     const newTmpOrder = new TmpOrder(tmpOrder)
-    newTmpOrder.restaurantInfo = restaurantInfo
     newTmpOrder.paymentIntentId = newPayment.paymentIntent.id
     newTmpOrder.transactionFees = newPayment.transactionFees
+    // add formattedArticleList to easily display orders
     await newTmpOrder.save()
 
     if (!newTmpOrder) {
@@ -246,7 +271,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
 exports.getOrder = catchAsyncErrors(async function (req, res, next) {
   const orderFound = await Order.findOne({
     orderNumber: req.params.orderNumber,
-  })
+  }).select("-paymentIntentId -transactionFees")
   if (orderFound) {
     const allowedIPs = [orderFound.customer.ip]
     const clientIP = req.ip
@@ -257,10 +282,8 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
         "FordbiddenError"
       )
     } else {
-      //don't send the restaurant proprieties to the client
-      delete orderFound.paymentIntendId
-      delete orderFound.transactionFees
-
+      //for security reasons, we delete the customer object from the order
+      delete orderFound.customer
       res.json(orderFound)
     }
   } else {
@@ -269,7 +292,9 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
       orderNumber: req.params.orderNumber,
     })
     if (tmpOrderFound) {
-      res.json(tmpOrderFound)
+     //for security reasons, we delete the customer object from the order
+     delete tmpOrderFound.customer
+     res.json(tmpOrderFound)
     } else {
       throw new AppError("Order Not Found", 404, "NotFoundError")
     }
@@ -279,23 +304,19 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
 exports.processOrderAfterPayment = async (paymentIntent) => {
   // Update the order status to paid
 
-  const tmpOrder = await TmpOrder.findById(paymentIntent.metadata.tmpOrderId)
+  const tmpOrder = await TmpOrder.findById(paymentIntent.metadata.tmpOrderId).select("-_id __v")
 
   if (!tmpOrder) {
     throw new AppError("Order not found", 404, "OrderNotFound")
   }
 
   // Create a plain object from the tmpOrder document
-  const tmpOrderObject = tmpOrder.toObject()
-  delete tmpOrderObject._id
-  delete tmpOrderObject.__v
 
-  const restaurantInfo = tmpOrderObject.restaurantInfo
+  const restaurantInfo = tmpOrder.restaurantInfo
 
   // Create the document in the real order collection
-  const newOrder = new Order(tmpOrderObject)
+  const newOrder = new Order(tmpOrder)
   const updatedOrder = await exports.updateOrderStatus(newOrder, "completed")
-
   // Send the order confirmation email, we use tmp order because contain restaurantInfo
   await exports.sendOrderMail(updatedOrder, restaurantInfo)
 

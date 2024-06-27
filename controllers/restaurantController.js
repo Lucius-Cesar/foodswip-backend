@@ -8,7 +8,7 @@ exports.getPublicRestaurantData = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
     slug: req.params.slug.toLowerCase(),
   })
-    .select("-privateSettings")
+    .select("-privateSettings -_id")
     .populate({
       path: "menu.foods",
       match: { display: true },
@@ -31,18 +31,20 @@ exports.getPublicRestaurantData = catchAsyncErrors(async (req, res, next) => {
 
 exports.getAdminRestaurantData = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
-    slug: req.params.slug.toLowerCase(),
-  })
+    _id: req.user.restaurant,
+  }).select("-_id")
+
   //
   if (restaurant) {
     //check if slug inside the jwt token is the same as restaurant.slug
-    if (req.user.slug !== restaurant.slug) {
+    /*
+    if (req.user.restaurant !== restaurant._id) {
       throw new AppError(
         "data access is Forbidden for this user",
         403,
         "ForbiddenError"
       )
-    }
+    }*/
     return res.json(restaurant)
   } else {
     throw new AppError("Restaurant Not Found", 404, "NotFoundError")
@@ -51,17 +53,19 @@ exports.getAdminRestaurantData = catchAsyncErrors(async (req, res, next) => {
 
 exports.updateRestaurantSettings = catchAsyncErrors(async (req, res, next) => {
   const restaurant = await Restaurant.findOne({
-    slug: req.body.slug,
+    _id: req.user.restaurant,
   })
+  
   if (restaurant) {
-    //check if slug inside the jwt token is the same as restaurant.slug
-    if (req.user.slug !== restaurant.slug) {
+    /*
+    if (req.user.restaurant !== restaurant._id) {
       throw new AppError(
         "Update restaurant settings is Forbidden for this user",
         403,
         "ForbiddenError"
       )
-    }
+    }*/
+
     //avoid deliveryPostCodes containing empty string
     req.body.publicSettings.deliveryPostCodes =
       req.body.publicSettings.deliveryPostCodes.filter(
@@ -77,7 +81,8 @@ exports.updateRestaurantSettings = catchAsyncErrors(async (req, res, next) => {
     restaurant.privateSettings = req.body.privateSettings
     restaurant.save().then((savedRestaurant) => {
       // Vérifiez si l'enregistrement a été sauvegardé avec succès
-      if (savedRestaurant === restaurant) {
+      if (savedRestaurant) {
+        delete savedRestaurant._id
         return res.json(savedRestaurant)
       } else {
         throw new AppError("Failed to save restaurant settings")

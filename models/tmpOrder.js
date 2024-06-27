@@ -29,8 +29,9 @@ const ArticleSchema = new mongoose.Schema({
   _id: false,
 })
 
+
 const TmpOrderSchema = new mongoose.Schema({
-  orderNumber: Number,
+  orderNumber: {type:Number, required:true, unique:true},
   customer: {
     firstname: String,
     lastname: String,
@@ -45,6 +46,12 @@ const TmpOrderSchema = new mongoose.Schema({
     ip: String,
   },
   articles: [ArticleSchema],
+  formattedArticlesList: [{
+    _id: false,
+    categoryTitle: String,
+    categoryNumber: Number,
+    articles: [ArticleSchema]
+  }],
   articlesSum: Number,
   deliveryFees: Number,
   totalSum: Number,

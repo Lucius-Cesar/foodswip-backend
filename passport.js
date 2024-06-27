@@ -1,7 +1,7 @@
 const passport = require("passport")
 const LocalStrategy = require("passport-local").Strategy
 const User = require("./models/user")
-
+const Restaurant = require("./models/restaurant")
 passport.use(
   "signup",
   new LocalStrategy(
@@ -11,11 +11,21 @@ passport.use(
       passReqToCallback: true,
     },
     async (req, mail, password, done) => {
+
+      const restaurant = await Restaurant.findOne({slug:req.body.slug})
+      if (!restaurant) {
+        throw new AppError({
+          message: "Restaurant not found",
+          statusCode: 404,
+          errorCode: "ErrorRestaurantNotFound",
+        })
+      }
       try {
         const user = await User.create({
           mail,
           password,
           slug: req.body.slug,
+          restaurant: restaurant._id,
         })
         return done(null, user)
       } catch (error) {

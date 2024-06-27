@@ -1,3 +1,5 @@
+//file not used anymore
+
 const transferSchema = new mongoose.Schema({
   orders: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Order", required: true },

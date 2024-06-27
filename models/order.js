@@ -28,7 +28,7 @@ const ArticleSchema = new mongoose.Schema({
 })
 
 const OrderSchema = {
-  orderNumber: Number,
+  orderNumber: {type:Number, required:true, unique:true},
   customer: {
     firstname: String,
     lastname: String,
@@ -43,6 +43,12 @@ const OrderSchema = {
     ip: String,
   },
   articles: [ArticleSchema],
+  formattedArticlesList: [{
+    _id: false,
+    categoryTitle: String,
+    categoryNumber: Number,
+    articles: [ArticleSchema]
+  }],
   articlesSum: Number,
   deliveryFees: Number,
   totalSum: Number,

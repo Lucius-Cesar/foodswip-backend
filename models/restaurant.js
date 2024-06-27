@@ -7,7 +7,10 @@ const FoodCategorySchema = new mongoose.Schema({
 
 const RestaurantSchema = new mongoose.Schema({
   name: String,
-  slug: String,
+  slug: { 
+    type: String,
+    required: true,
+    unique: true},
   mail: String,
   address: {
     street: String,
