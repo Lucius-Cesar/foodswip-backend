@@ -45,7 +45,9 @@ const buildFormattedArticleList = (articles) => {
 //controller
 
 exports.sendOrderMail = async (order, restaurant) => {
+  console.log(restaurant)
   const expeditor = `${restaurant.name} <noreply@foodswip-order.com>`
+  console.log(expeditor)
   const customerMail = order.customer.mail
   const mailToTheCustomer = await transporter.sendMail({
     from: expeditor,
@@ -266,7 +268,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
   if (["cash", "bancontact"].includes(tmpOrder.paymentMethod)) {
     const newOrder = new Order(tmpOrder)
     await newOrder.save()
-    await exports.sendNewOrderToRestaurant(newOrder, restaurant._id)
+    await exports.sendNewOrderToRestaurant(newOrder, restaurant)
     res.json(newOrder)
   }
   //if the order is paid online, create a payment intent, send the client secret and the order id
