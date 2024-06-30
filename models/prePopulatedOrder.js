@@ -45,17 +45,6 @@ const PrePopulatedOrderSchema = new mongoose.Schema({
   status: String,
   statusHistory: [{ status: String, date: Date, _id: false }],
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
-  restaurantInfo: {
-    _id: false,
-    name: String,
-    phoneNumber: String,
-    address: {
-      street: String,
-      streetNumber: String,
-      postCode: String,
-      city: String,
-    }
-  },
   slug: String,
 })
 

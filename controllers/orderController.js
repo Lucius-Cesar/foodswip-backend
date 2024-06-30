@@ -1,11 +1,14 @@
 const checkBody = require("../utils/checkBody")
 const Restaurant = require("../models/restaurant")
+const Subscription = require("../models/subscription")
 const Order = require("../models/order")
 const PrePopulatedOrder = require("../models/prePopulatedOrder")
 const TmpOrder = require("../models/tmpOrder")
 const Counter = require("../models/counter")
 const catchAsyncErrors = require("../utils/catchAsyncErrors")
 const AppError = require("../utils/AppError")
+const {sendNewOrderToRestaurantSocket} = require("../websocket.js")
+const webpush = require('web-push');
 
 //helpers
 const {
@@ -79,12 +82,48 @@ exports.sendOrderMail = async (order, restaurant) => {
   return { success: true }
 }
 
+exports.sendNewOrderToRestaurant = async (order, restaurant) => {
+  try {
+    // First send to the restaurant websocket
+    sendNewOrderToRestaurantSocket(order, restaurant._id);
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi à la websocket du restaurant:', error);
+  }
+
+  try {
+    // Send the mail to customer and/or restaurant
+    await exports.sendOrderMail(order, restaurant);
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+  }
+
+  try {
+    // Send the push notification to the restaurant
+    const restaurantSubscriptions = await Subscription.find({ restaurant: restaurant._id });
+    if (restaurantSubscriptions) {
+      for (let subscription of restaurantSubscriptions) {
+        try {
+          await webpush.sendNotification(subscription, JSON.stringify({
+            title: `Nouvelle commande #${order.orderNumber}`,
+            message: `${order.orderType === 0 ? "Livraison" : "À emporter"} - ${order.totalSum} €`,
+          }));
+        } catch (error) {
+          console.error('Erreur lors de l\'envoi de la notification push:', error);
+          continue;
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des abonnements du restaurant:', error);
+  }
+};
+
 exports.updateOrderStatus = async (order, newStatus, save = true) => {
   const currentDate = new Date()
   order.status = newStatus
   order.statusHistory.push({ status: newStatus, date: currentDate })
   if (save) {
-    orderSaved = await order.save()
+    const orderSaved = await order.save()
     if (!orderSaved) {
       throw new AppError(
         "Error updating order status",
@@ -125,9 +164,9 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     { $inc: { count: 1 } }
   )
 
-  // if the payment method is cash, the order is completed, if it's online, the order is pending
+  // if the payment method is cash, the order is new, if it's online, the order is pending
   const newOrderStatus = ["cash", "bancontact"].includes(req.body.paymentMethod)
-    ? "completed"
+    ? "new"
     : req.body.paymentMethod === "online"
     ? "paymentPending"
     : null
@@ -171,15 +210,6 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     throw new AppError("Restaurant not found", 404, "ErrorNotFound")
   }
   tmpOrder.restaurant = restaurant._id
-  tmpOrder.restaurantInfo = {
-    name: restaurant.name,
-    phoneNumber: restaurant.phoneNumber,
-    address: restaurant.address,
-    website: restaurant.website,
-    privateSettings: {
-      orderMailReception: restaurant.privateSettings.orderMailReception,
-    },
-  }
 
   tmpOrder.articles.forEach((article, i) => {
     // Vérification de l'association des articles avec le restaurant
@@ -236,7 +266,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
   if (["cash", "bancontact"].includes(tmpOrder.paymentMethod)) {
     const newOrder = new Order(tmpOrder)
     await newOrder.save()
-    await exports.sendOrderMail(newOrder, tmpOrder.restaurantInfo)
+    await exports.sendNewOrderToRestaurant(newOrder, restaurant._id)
     res.json(newOrder)
   }
   //if the order is paid online, create a payment intent, send the client secret and the order id
@@ -305,20 +335,37 @@ exports.processOrderAfterPayment = async (paymentIntent) => {
   // Update the order status to paid
 
   const tmpOrder = await TmpOrder.findById(paymentIntent.metadata.tmpOrderId).select("-_id __v")
-
+  const restaurant = await Restaurant.findById(tmpOrder.restaurant._id)
   if (!tmpOrder) {
     throw new AppError("Order not found", 404, "OrderNotFound")
   }
 
   // Create a plain object from the tmpOrder document
 
-  const restaurantInfo = tmpOrder.restaurantInfo
 
   // Create the document in the real order collection
   const newOrder = new Order(tmpOrder)
-  const updatedOrder = await exports.updateOrderStatus(newOrder, "completed")
-  // Send the order confirmation email, we use tmp order because contain restaurantInfo
-  await exports.sendOrderMail(updatedOrder, restaurantInfo)
+  const updatedOrder = await exports.updateOrderStatus(newOrder, "new")
+  //send the order to the restaurant websocket
+  await exports.sendNewOrderToRestaurant(updatedOrder, restaurant)
+
 
   return newOrder
 }
+
+exports.getOrders = catchAsyncErrors(async function (req, res, next) {
+  const {  start, end, status, sortBy, sortDirection} = req.query;
+  const orders = await Order.find({
+    restaurant: req.user.restaurant,
+    creationDate: {
+      $gte: new Date(start),
+      $lte: new Date(end)
+    },
+    // Conditionally include status query
+    ...(status ? { status: status } : { status: { $ne: null } })
+  })
+  .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 });
+  
+
+  res.json(orders)
+})

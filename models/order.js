@@ -68,19 +68,7 @@ const OrderSchema = {
   statusHistory: [{ status: String, date: Date, _id: false }],
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
   slug: String,
-  restaurantInfo: {
-    _id: false,
-    name: String,
-    phoneNumber: String,
-    address: {
-      street: String,
-      streetNumber: String,
-      postCode: String,
-      city: String,
-    },
-    website: String,
-    orderMailReception: { _id: false, enabled: Boolean, mail: String },
-  },
+
 }
 
 const Order = mongoose.model("order", OrderSchema)

@@ -81,6 +81,7 @@ const RestaurantSchema = new mongoose.Schema({
     commission: Boolean,
     stripeConnectId: String,
   },
+  subscription: {object: {type: mongoose.Schema.Types.ObjectId, ref: "subscription"}},
   //foodSchema is nested in foodCategoriesSchema
   menu: [FoodCategorySchema],
 })

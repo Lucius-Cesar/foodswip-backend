@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-// this schema is the same as order except restaurantInfo field that is only present in the tmpOrder
 // tmpOrder is used to store the paymentPending orders
 
 const FoodSchema = new mongoose.Schema({
@@ -71,21 +70,7 @@ const TmpOrderSchema = new mongoose.Schema({
   statusHistory: [{ status: String, date: Date, _id: false }],
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "restaurant" },
   slug: String,
-  restaurantInfo: {
-    _id: false,
-    name: String,
-    phoneNumber: String,
-    address: {
-      street: String,
-      streetNumber: String,
-      postCode: String,
-      city: String,
-    },
-    website: String,
-    privateSettings: {
-      orderMailReception: { _id: false, enabled: Boolean, mail: String },
-    },
-  },
+
 })
 
 const TmpOrder = mongoose.model("tmpOrder", TmpOrderSchema)

@@ -8,6 +8,8 @@ var app = require("../app");
 var debug = require("debug")("foodswip-backend:server");
 var fs = require("fs");
 var http = require("http");
+const {initiateWebSocket} = require('../websocket'); // Chemin vers webSocketServer.js
+
 //var https = require("https")
 
 /**
@@ -33,6 +35,9 @@ var server = https.createServer(options, app);
 */
 
 var server = http.createServer(app);
+
+//initiate the websocket to establish a connection between restaurant administrators and server
+const io = initiateWebSocket(server);
 
 /**
  * Listen on provided port, on all network interfaces.

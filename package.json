@@ -18,10 +18,13 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.4",
     "morgan": "~1.9.1",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",
     "nodemailer-mailgun-transport": "^2.1.5",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "stripe": "^15.7.0"
+    "socket.io": "^4.7.5",
+    "stripe": "^15.7.0",
+    "web-push": "^3.6.7"
   }
 }

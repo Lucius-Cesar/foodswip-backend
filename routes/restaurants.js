@@ -23,4 +23,5 @@ router.post(
   restaurantController.updateRestaurantSettings
 )
 
+
 module.exports = router
