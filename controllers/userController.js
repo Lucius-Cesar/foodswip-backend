@@ -39,7 +39,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
           userInfo,
           process.env.JWT_REFRESH_SECRET,
           {
-            expiresIn: parseInt(process.env.JWT_REFRESH_EXPIRATION),
+            expiresIn: "365d", //one year
           }
         )
 
@@ -50,6 +50,8 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
           httpOnly: true,
           sameSite: true,
           secure: true,
+          maxAge:  365 * 24 * 60 * 60 * 1000 // One year millisecondes
+
         })
         return res.json({
           token: accessToken,

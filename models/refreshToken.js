@@ -8,7 +8,7 @@ const RefreshTokenSchema = new mongoose.Schema({
 //Automatically delete the document after refreshToken expiration
 RefreshTokenSchema.index(
   { createdAt: 1 },
-  { expireAfterSeconds: parseInt(process.env.JWT_REFRESH_EXPIRATION) }
+  { expireAfterSeconds: 365 * 24 * 60 * 60  } //one year in seconds
 );
 
 const RefreshToken = mongoose.model("RefreshToken", RefreshTokenSchema);
