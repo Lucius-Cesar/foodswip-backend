@@ -42,4 +42,12 @@ function sendNewOrderToRestaurantSocket(order, restaurantId) {
     }
 }
 
-module.exports = { initiateWebSocket, sendNewOrderToRestaurantSocket };
+function updateOrderToRestaurantSocket(order, restaurantId) {
+    if (io) {
+        io.to(`restaurant:${restaurantId}`).emit('update-order', order);
+    } else {
+        console.error('Socket.IO is not initialized.');
+    }
+}
+
+module.exports = { initiateWebSocket, sendNewOrderToRestaurantSocket, updateOrderToRestaurantSocket };

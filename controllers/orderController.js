@@ -354,7 +354,7 @@ exports.processOrderAfterPayment = async (paymentIntent) => {
     delete updatedOrderObject.transactionFees;
     //send the order to the restaurant websocket
     await exports.sendNewOrderToRestaurant(updatedOrder,restaurant)
-    return hihihi
+    return updatedOrderObject
 
   }
   catch (error) {
