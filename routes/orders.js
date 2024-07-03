@@ -5,7 +5,7 @@ const authenticateToken = require("../middlewares/authenticateToken")
 const catchAsyncErrors = require("../utils/catchAsyncErrors")
 const AppError = require("../utils/AppError")
 const Order = require("../models/order")
-
+const { updateOrderToRestaurantSocket } = require("../websocket")
 router.get(
   "/",
   authenticateToken,
@@ -23,6 +23,7 @@ router.post(
         "ForbiddenError")    }
     else{
       const updatedOrder = await orderController.updateOrderStatus(order, status, save = true)
+      updateOrderToRestaurantSocket(updatedOrder, req.user.restaurant)
       res.json(updatedOrder)
     }
   }))

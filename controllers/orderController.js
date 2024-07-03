@@ -47,7 +47,6 @@ const buildFormattedArticleList = (articles) => {
 exports.sendOrderMail = async (order, restaurant) => {
   console.log(restaurant)
   const expeditor = `${restaurant.name} <noreply@foodswip-order.com>`
-  console.log(expeditor)
   const customerMail = order.customer.mail
   const mailToTheCustomer = await transporter.sendMail({
     from: expeditor,
@@ -334,26 +333,42 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
 })
 
 exports.processOrderAfterPayment = async (paymentIntent) => {
-  // Update the order status to paid
+  try {
 
-  const tmpOrder = await TmpOrder.findById(paymentIntent.metadata.tmpOrderId).select("-_id __v")
-  const restaurant = await Restaurant.findById(tmpOrder.restaurant._id)
+  let tmpOrder = await TmpOrder.findOne({_id:paymentIntent.metadata.tmpOrderId}).populate('restaurant').lean()
   if (!tmpOrder) {
     throw new AppError("Order not found", 404, "OrderNotFound")
   }
+  
+  const restaurant = tmpOrder.restaurant
+  delete tmpOrder._id
+  delete tmpOrder.__v
+  delete tmpOrder.restaurant
 
-  // Create a plain object from the tmpOrder document
+    const newOrder = new Order(tmpOrder)
+    const updatedOrder = await exports.updateOrderStatus(newOrder, "new", save = false)
+    await updatedOrder.save()
+    const updatedOrderObject = updatedOrder.toObject()
+    delete updatedOrderObject.customer;
+    delete updatedOrderObject.paymentIntentId;
+    delete updatedOrderObject.transactionFees;
+    //send the order to the restaurant websocket
+    await exports.sendNewOrderToRestaurant(updatedOrder,restaurant)
+    return hihihi
 
-
-  // Create the document in the real order collection
-  const newOrder = new Order(tmpOrder)
-  const updatedOrder = await exports.updateOrderStatus(newOrder, "new")
-  //send the order to the restaurant websocket
-  await exports.sendNewOrderToRestaurant(updatedOrder, restaurant)
-
-
-  return newOrder
-}
+  }
+  catch (error) {
+    const mailList = [process.env.CONTACT_MAIL, process.env.CONTACT_MAIL_2]
+    
+  const mail = await transporter.sendMail({
+    from: `FoodSwip Bug <noreply@foodswip-order.com>`,
+    to: mailList,
+    subject: "Error processing order after payment",
+    html: `<b>Un problème un survenu sur foodswip: l'utilisateur a payé en ligne mais la commande n'a pas été enregistrée.</b>`
+  })
+    throw new AppError("Error processing order after payment", 500, "ErrorProcessingOrderAfterPayment")
+  }
+  }
 
 exports.getOrders = catchAsyncErrors(async function (req, res, next) {
   const {  start, end, status, sortBy, sortDirection} = req.query;

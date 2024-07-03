@@ -61,7 +61,7 @@ app.use("/subscriptions", subscriptionsRouter)
 //push notification setup
 //for web push notifications
 webpush.setVapidDetails(
-  `mailto:${ process.env.WEB_PUSH_CONTACT}`,
+  `mailto:${ process.env.CONTACT_MAIL}`,
   process.env.VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY
 );
