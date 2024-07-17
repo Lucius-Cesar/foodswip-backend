@@ -343,17 +343,20 @@ exports.processOrderAfterPayment = async (paymentIntent) => {
   const restaurant = tmpOrder.restaurant
   delete tmpOrder._id
   delete tmpOrder.__v
-  delete tmpOrder.restaurant
 
     const newOrder = new Order(tmpOrder)
     const updatedOrder = await exports.updateOrderStatus(newOrder, "new", save = false)
     await updatedOrder.save()
+    
+    //send the order to the restaurant websocket and mail
+    await exports.sendNewOrderToRestaurant(updatedOrder,restaurant)
+
     const updatedOrderObject = updatedOrder.toObject()
     delete updatedOrderObject.customer;
     delete updatedOrderObject.paymentIntentId;
     delete updatedOrderObject.transactionFees;
-    //send the order to the restaurant websocket
-    await exports.sendNewOrderToRestaurant(updatedOrder,restaurant)
+    delete updatedOrderObject.restaurant;
+
     return updatedOrderObject
 
   }
