@@ -47,7 +47,7 @@ const buildFormattedArticleList = (articles) => {
 
 exports.sendOrderMail = async (order, restaurant) => {
   console.log(restaurant);
-  const expeditor = `${restaurant.name} <noreply@foodswip.com>`;
+  const expeditor = `${restaurant.name} <${process.env.MAIL_NOREPLY}>`;
   const customerMail = order.customer.mail;
   const mailToTheCustomer = await transporter.sendMail({
     from: expeditor,
@@ -68,7 +68,7 @@ exports.sendOrderMail = async (order, restaurant) => {
   if (restaurant?.privateSettings?.orderMailReception?.enabled) {
     const restaurantMail = restaurant.privateSettings.orderMailReception.mail;
     const mailToTheRestaurant = await transporter.sendMail({
-      from: "Foodswip <noreply@foodswip.com>",
+      from: `Foodswip <${process.env.MAIL_NOREPLY}>`,
       to: restaurantMail,
       subject: `Nouvelle commande #${order.orderNumber}`,
       html: orderRestaurantMailHtml(order, restaurant),
@@ -386,7 +386,7 @@ exports.processOrderAfterPayment = async (paymentIntent) => {
     const mailList = [process.env.CONTACT_MAIL, process.env.CONTACT_MAIL_2];
 
     const mail = await transporter.sendMail({
-      from: `FoodSwip Bug <noreply@foodswip.com>`,
+      from: `FoodSwip Bug <${process.env.MAIL_NOREPLY}>`,
       to: mailList,
       subject: "Error processing order after payment",
       html: `<b>Un problème un survenu sur foodswip: l'utilisateur a payé en ligne mais la commande n'a pas été enregistrée.</b>`,
