@@ -322,6 +322,8 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
   }).select("-paymentIntentId -transactionFees");
   if (orderFound) {
     const allowedIPs = [orderFound.customer.ip];
+
+    /*
     const clientIP = req.ip;
     if (!allowedIPs.includes(clientIP)) {
       throw new AppError(
@@ -330,10 +332,10 @@ exports.getOrder = catchAsyncErrors(async function (req, res, next) {
         "FordbiddenError"
       );
     } else {
-      //for security reasons, we delete the customer object from the order
-      delete orderFound.customer;
-      res.json(orderFound);
-    }
+     */
+    //for security reasons, we delete the customer object from the order
+    delete orderFound.customer;
+    res.json(orderFound);
   } else {
     //if the order is not found, we check in the tmpOrder collection (for online payment, the order is created in the order collection only after stripe wehbook actions)
     const tmpOrderFound = await TmpOrder.findOne({
